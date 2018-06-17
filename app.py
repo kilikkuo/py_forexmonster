@@ -7,7 +7,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "<p>Hello World!</p>"
+
+    html = "<p>Hello World!</p>"
+    formUSD2NTD = "<form action=\'/usd_ntd\'><input type=\"submit\" value=\"Go to USD2NTD\" /></form>"
+    html += formUSD2NTD
+    return html
 
 @app.route('/usd_ntd')
 def usd_ntd():

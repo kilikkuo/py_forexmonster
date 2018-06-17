@@ -14,6 +14,7 @@ if __name__ == "__main__":
         from app import start_app
         start_app()
     else:
+        # Console version
         CORRIDOR_LUT = {'usd_ntd' : True,
                         'usd_thb' : True,
                         'usd_khr' : True,
