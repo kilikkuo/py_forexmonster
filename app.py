@@ -1,6 +1,7 @@
 # coding=UTF-8
 
 from flask import Flask, request, current_app
+from utils import is_local_dev_env
 import json
 
 app = Flask(__name__)
@@ -31,4 +32,8 @@ def usd_ntd():
     return html
 
 def start_app():
-    app.run(debug=True, use_reloader=True)
+    if is_local_dev_env():
+        app.run(host="0.0.0.0", debug=True, use_reloader=True)
+    else:
+        from os import environ
+        app.run(host="0.0.0.0", debug=False, port=environ.get("PORT", 5000))

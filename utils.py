@@ -27,3 +27,7 @@ def find_element_by_xpath_safely(driver, xpath):
     except NoSuchElementException:
         is_ok = False
     return is_ok, elem
+
+def is_local_dev_env():
+    import getpass
+    return getpass.getuser() == 'kilikkuo'
