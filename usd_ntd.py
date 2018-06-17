@@ -79,8 +79,10 @@ def get_impl2():
             if c.text in bankNames:
                 cp = c.parent
                 sbs = cp.find_next_siblings('td')
-                result[c.text] = locale.atof(sbs[2].text)
-                print("Bank : {} / FxRate : {}".format(c.text, locale.atof(sbs[2].text)))
+                fxrate = sbs[2].text
+                fxrate = fxrate.replace(",", "")
+                result[c.text] = fxrate
+                print("Bank : {} / FxRate : {}".format(c.text, result[c.text]))
     return result
 
 def get_current_forex_price():
