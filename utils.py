@@ -3,6 +3,13 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
+PHANTONJS_DRIVER = None
+def create_phantomjs():
+    global PHANTONJS_DRIVER
+    if PHANTONJS_DRIVER is None:
+        PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path='./phantomjs211/bin/phantomjs')
+    return PHANTONJS_DRIVER
+
 def create_chromedriver(args=[]):
     options = webdriver.ChromeOptions()
     for arg in args:

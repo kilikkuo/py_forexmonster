@@ -18,9 +18,17 @@ def index():
     html = "<p>Hello World!</p>"
     formUSD2NTD = "<form action=\'/usd_ntd\'><input type=\"submit\" value=\"Go to USD2NTD\" /></form>"
     formUSD2KHR = "<form action=\'/usd_khr\'><input type=\"submit\" value=\"Go to USD2KHR\" /></form>"
+    formUSD2THB = "<form action=\'/usd_thb\'><input type=\"submit\" value=\"Go to USD2THB\" /></form>"
     html += formUSD2NTD
     html += formUSD2KHR
+    html += formUSD2THB
+
+    # pg = "<p> now loading ... <progress id=\"pg_bar\" max=\"100\" value=\"50\"></progress></p>"
+    # html += pg
     return html
+
+def cb_progress(value):
+    pass
 
 @app.route('/usd_ntd')
 def usd_ntd():
@@ -44,6 +52,21 @@ def usd_khr():
     result = get_current_forex_price()
 
     html = "<p> USD <=> KHR </p>"
+
+    html += TABLE_SCRIPTS_BEGIN
+    for bank, price in result.items():
+        html += "<tr><td>{:>30}</td><td>{:>12}</td></tr>".format(bank, price)
+
+    html += TABLE_SCRIPTS_END
+    return html
+
+@app.route('/usd_thb')
+def usd_thb():
+    global TABLE_SCRIPTS_BEGIN, TABLE_SCRIPTS_END
+    from usd_thb import get_current_forex_price
+    result = get_current_forex_price()
+
+    html = "<p> USD <=> THB </p>"
 
     html += TABLE_SCRIPTS_BEGIN
     for bank, price in result.items():
