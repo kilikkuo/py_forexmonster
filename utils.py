@@ -7,7 +7,10 @@ PHANTONJS_DRIVER = None
 def create_phantomjs():
     global PHANTONJS_DRIVER
     if PHANTONJS_DRIVER is None:
-        PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path='./phantomjs211/bin/phantomjs')
+        if is_local_dev_env():
+            PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path="./phantomjs211/bin/phantomjs")
+        else:
+            PHANTONJS_DRIVER = webdriver.PhantomJS()
     return PHANTONJS_DRIVER
 
 def create_chromedriver(args=[]):
