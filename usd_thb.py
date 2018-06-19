@@ -147,6 +147,7 @@ def get_scb(url, bankInfo=None):
         elem = driver.find_element_by_xpath(xpath)
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
+        print(fxrate)
         return fxrate
     except:
         traceback.print_exc()
