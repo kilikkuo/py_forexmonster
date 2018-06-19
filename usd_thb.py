@@ -144,10 +144,12 @@ def get_scb(url, bankInfo=None):
             print("[WARNING] Cannot find FxRate from {}".format(name))
             return None
         utils.get_with_retry(driver, url)
+        print(" page_source : {}".format(driver.page_source))
         elem = driver.find_element_by_xpath(xpath)
+        print(" ELEMENT : {}".format(elem))
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
-        print(fxrate)
+        print(" RATE : {}".format(fxrate))
         return fxrate
     except:
         traceback.print_exc()
