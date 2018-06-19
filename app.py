@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 from flask import Flask, request, current_app
-from utils import is_local_dev_env
+from utils import is_local_dev_env, create_phantomjs
 import json
 
 app = Flask(__name__)
@@ -15,6 +15,7 @@ TABLE_SCRIPTS_END = "</tbody></table>"
 
 @app.route('/')
 def index():
+    create_phantomjs()
     html = "<p>Hello World!</p>"
     formUSD2NTD = "<form action=\'/usd_ntd\'><input type=\"submit\" value=\"Go to USD2NTD\" /></form>"
     formUSD2KHR = "<form action=\'/usd_khr\'><input type=\"submit\" value=\"Go to USD2KHR\" /></form>"

@@ -1,5 +1,8 @@
 # coding=UTF-8
 
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from datetime import datetime
 from pprint import pprint
 import traceback
@@ -91,6 +94,12 @@ def get_bkb(url, bankInfo=None):
             print("[WARNING] Cannot find FxRate from {}".format(name))
             return None
         utils.get_with_retry(driver, url)
+
+        def get_text(dr):
+            elem = dr.find_element(By.XPATH, xpath)
+            return elem.text != ""
+        WebDriverWait(driver, 20, 0.5).until(get_text)
+
         elem = driver.find_element_by_xpath(xpath)
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
@@ -144,12 +153,14 @@ def get_scb(url, bankInfo=None):
             print("[WARNING] Cannot find FxRate from {}".format(name))
             return None
         utils.get_with_retry(driver, url)
-        print(" page_source : {}".format(driver.page_source))
+
+        def get_text(dr):
+            elem = dr.find_element(By.XPATH, xpath)
+            return elem.text != ""
+        WebDriverWait(driver, 20, 0.5).until(get_text)
         elem = driver.find_element_by_xpath(xpath)
-        print(" ELEMENT : {}".format(elem))
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
-        print(" RATE : {}".format(fxrate))
         return fxrate
     except:
         traceback.print_exc()

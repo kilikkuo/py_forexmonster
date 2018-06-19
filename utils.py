@@ -11,6 +11,7 @@ def create_phantomjs():
             PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path="./phantomjs211/bin/phantomjs")
         else:
             PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path="./vendor/phantomjs/bin/phantomjs")
+    PHANTONJS_DRIVER.implicitly_wait(10)
     return PHANTONJS_DRIVER
 
 def create_chromedriver(args=[]):
