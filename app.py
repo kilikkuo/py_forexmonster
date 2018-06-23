@@ -68,12 +68,14 @@ def usd_thb():
     result = get_current_forex_price()
 
     html = "<p> USD <=> THB </p>"
-
+    print(" >>>>> 1")
     html += TABLE_SCRIPTS_BEGIN
     for bank, price in result.items():
+        print(" >>>>> bank : {} >>>>> ".format(bank))
         html += "<tr><td>{:>30}</td><td>{:>12}</td></tr>".format(bank, price)
-
+        print(" >>>>> bank : {} <<<<<< ".format(bank))
     html += TABLE_SCRIPTS_END
+    print(" >>>>> 3")
     return html
 
 def start_app():
