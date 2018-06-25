@@ -3,7 +3,6 @@
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from datetime import datetime
 from pprint import pprint
 import traceback
 import locale
@@ -48,7 +47,6 @@ BANK_INFOS = [{"SWIFT": "BOTHTHBK",
 ]
 def get_impl():
     global BANK_INFOS
-    print(datetime.now())
     driver = create_headless_chromedriver()
     try:
         for item in BANK_INFOS:
@@ -98,7 +96,7 @@ def get_bkb(url, bankInfo=None):
         def get_text(dr):
             elem = dr.find_element(By.XPATH, xpath)
             return elem.text != ""
-        WebDriverWait(driver, 20, 0.5).until(get_text)
+        WebDriverWait(driver, 10, 0.5).until(get_text)
 
         elem = driver.find_element_by_xpath(xpath)
         fxrate = elem.text
@@ -157,7 +155,7 @@ def get_scb(url, bankInfo=None):
         def get_text(dr):
             elem = dr.find_element(By.XPATH, xpath)
             return elem.text != ""
-        WebDriverWait(driver, 20, 0.5).until(get_text)
+        WebDriverWait(driver, 10, 0.5).until(get_text)
         elem = driver.find_element_by_xpath(xpath)
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
@@ -186,5 +184,4 @@ def get_impl2():
     pass
 
 def get_current_forex_price():
-    print(datetime.now())
     return get_impl2()

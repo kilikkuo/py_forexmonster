@@ -1,6 +1,5 @@
 # coding=UTF-8
 
-from datetime import datetime
 import traceback
 import locale
 import requests
@@ -43,7 +42,6 @@ def get_impl():
     result = {}
     utils.get_with_retry(driver, ALL_PRICE_URL)
     try:
-        print(datetime.now())
         xpathTable = "//div[@id='right']/table[2]/tbody/tr"
         lstElem = driver.find_elements_by_xpath(xpathTable)
         for i in range(2, len(lstElem)+1):
@@ -83,6 +81,7 @@ def get_impl2():
                 fxrate = fxrate.replace(",", "")
                 result[c.text] = fxrate
                 print("Bank : {} / FxRate : {}".format(c.text, result[c.text]))
+
     return result
 
 def get_current_forex_price():

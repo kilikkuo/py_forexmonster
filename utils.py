@@ -11,7 +11,7 @@ def create_phantomjs():
             PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path="./phantomjs211/bin/phantomjs")
         else:
             PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path="./vendor/phantomjs/bin/phantomjs")
-    PHANTONJS_DRIVER.implicitly_wait(10)
+    PHANTONJS_DRIVER.implicitly_wait(5)
     return PHANTONJS_DRIVER
 
 def create_chromedriver(args=[]):
@@ -21,7 +21,7 @@ def create_chromedriver(args=[]):
     driver = webdriver.Chrome(executable_path='./chromedriver', chrome_options=options)
     return driver
 
-def get_with_retry(driver, url, numRetry=3):
+def get_with_retry(driver, url, numRetry=2):
     for _ in range(numRetry):
         try:
             driver.get(url)

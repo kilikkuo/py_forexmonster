@@ -1,6 +1,5 @@
 # coding=UTF-8
 
-from datetime import datetime
 import traceback
 import locale
 import requests
@@ -158,5 +157,4 @@ def get_impl2():
     pass
 
 def get_current_forex_price():
-    print(datetime.now())
     return get_impl2()

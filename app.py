@@ -2,83 +2,86 @@
 
 from flask import Flask, request, current_app
 from utils import is_local_dev_env, create_phantomjs
+from datetime import datetime
 import json
+import threading
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
+scheduler = BackgroundScheduler()
+
+IN_PROGRESS = []
 
 TABLE_SCRIPTS_BEGIN = "<table style=\"border: 5px double rgb(109, 2, 107); height: 100px;" +\
-                    "background-color: rgb(255, 255, 255); width: 300px;\" align=\"left\"" +\
-                    "cellpadding=\"5\" cellspacing=\"5\" frame=\"border\" rules=\"all\"><tbody>" +\
-                    "<tr><td>{:>12}</td><td>{:>12}</td></tr>".format("外匯機構", "牌價")
+                    "background-color: rgb(255, 255, 255); width: 300px;" +\
+                    "display: block flow;float: none\" align=\"left\" " +\
+                    "cellpadding=\"5\" cellspacing=\"5\" frame=\"border\" rules=\"all\"><tbody>"
 
 TABLE_SCRIPTS_END = "</tbody></table>"
 
+DISPLAY_PAGE = ""
+
 @app.route('/')
 def index():
+    global DISPLAY_PAGE
+    if DISPLAY_PAGE:
+        return DISPLAY_PAGE
+
     create_phantomjs()
-    html = "<p>Hello World!</p>"
-    formUSD2NTD = "<form action=\'/usd_ntd\'><input type=\"submit\" value=\"Go to USD2NTD\" /></form>"
-    formUSD2KHR = "<form action=\'/usd_khr\'><input type=\"submit\" value=\"Go to USD2KHR\" /></form>"
-    formUSD2THB = "<form action=\'/usd_thb\'><input type=\"submit\" value=\"Go to USD2THB\" /></form>"
-    html += formUSD2NTD
-    html += formUSD2KHR
-    html += formUSD2THB
 
-    # pg = "<p> now loading ... <progress id=\"pg_bar\" max=\"100\" value=\"50\"></progress></p>"
-    # html += pg
+    html = "<html><head><meta http-equiv=\"refresh\" content=\"5\"></head><body><p>Hello World!</p>"
+
+    create_workers()
+    html += "</body></html>"
+    DISPLAY_PAGE = html
     return html
 
-def cb_progress(value):
-    pass
+def worker_callback(name, ret):
+    global DISPLAY_PAGE
+    assert DISPLAY_PAGE
 
-@app.route('/usd_ntd')
-def usd_ntd():
-    global TABLE_SCRIPTS_BEGIN, TABLE_SCRIPTS_END
-    from usd_ntd import get_current_forex_price
-    result = get_current_forex_price()
+    head = DISPLAY_PAGE.split("</body></html>")[0]
 
-    html = "<p> USD <=> NTD </p>"
+    startTime = ret["start"]
+    results = ret["results"]
 
-    html += TABLE_SCRIPTS_BEGIN
+    part = results
+
+    html = head + part + "</body></html>"
+    DISPLAY_PAGE = html
+
+def create_workers():
+    t1 = threading.Thread(target = usd_to_something_worker, args=("ntd", worker_callback)).start()
+    IN_PROGRESS.append("ntd")
+    t2 = threading.Thread(target = usd_to_something_worker, args=("khr", worker_callback)).start()
+    IN_PROGRESS.append("khr")
+    t3 = threading.Thread(target = usd_to_something_worker, args=("thb", worker_callback)).start()
+    IN_PROGRESS.append("thb")
+    t4 = threading.Thread(target = usd_to_something_worker, args=("cny", worker_callback)).start()
+    IN_PROGRESS.append("cny")
+
+def usd_to_something_worker(something, callback):
+    moduleName = "usd_" + something
+    module = __import__(moduleName)
+
+    startTime = datetime.now()
+    result = module.get_current_forex_price()
+
+    table = ""
+    table += "<p>USD <=> {} / Last updated: {}<br/>".format(something.upper(), startTime)
+    table += TABLE_SCRIPTS_BEGIN
+    table += "<tr><th>{:>12}</th><th>{:>12}</th></tr>".format("外匯機構", "牌價")
     for bank, price in result.items():
-        html += "<tr><td>{:>30}</td><td>{:>12}</td></tr>".format(bank, price)
-    
-    html += TABLE_SCRIPTS_END
-    return html
+        table += "<tr><td>{:>30}</td><td>{:>12}</td></tr>".format(bank, price)
 
-@app.route('/usd_khr')
-def usd_khr():
-    global TABLE_SCRIPTS_BEGIN, TABLE_SCRIPTS_END
-    from usd_khr import get_current_forex_price
-    result = get_current_forex_price()
+    table += TABLE_SCRIPTS_END
+    table += "</p>"
 
-    html = "<p> USD <=> KHR </p>"
-
-    html += TABLE_SCRIPTS_BEGIN
-    for bank, price in result.items():
-        html += "<tr><td>{:>30}</td><td>{:>12}</td></tr>".format(bank, price)
-
-    html += TABLE_SCRIPTS_END
-    return html
-
-@app.route('/usd_thb')
-def usd_thb():
-    global TABLE_SCRIPTS_BEGIN, TABLE_SCRIPTS_END
-    from usd_thb import get_current_forex_price
-    result = get_current_forex_price()
-
-    html = "<p> USD <=> THB </p>"
-    print(" >>>>> 1")
-    html += TABLE_SCRIPTS_BEGIN
-    for bank, price in result.items():
-        print(" >>>>> bank : {} >>>>> ".format(bank))
-        html += "<tr><td>{:>30}</td><td>{:>12}</td></tr>".format(bank, price)
-        print(" >>>>> bank : {} <<<<<< ".format(bank))
-    html += TABLE_SCRIPTS_END
-    print(" >>>>> 3")
-    return html
+    callback(something, {"start": startTime, "results": table})
+    IN_PROGRESS.remove(something)
 
 def start_app():
+    job = scheduler.add_job(create_workers, 'interval',  minutes=5)
     if is_local_dev_env():
         app.run(host="0.0.0.0", debug=True, use_reloader=True)
     else:
