@@ -58,7 +58,7 @@ def get_chinamoney(url, bankInfo=None):
                 return [(name, rateCNYUSD)]
     except:
         traceback.print_exc()
-    return [(name, None)]
+    return [(name, 0)]
 
 def get_realtimecny(url, bankInfo=None):
     rateInfo = []
@@ -75,7 +75,7 @@ def get_realtimecny(url, bankInfo=None):
         return rateInfo
     except:
         traceback.print_exc()
-    return (bankInfo["NAME"], None)
+    return (bankInfo["NAME"], 0)
 
 def get_bosc(url, bankInfo=None):
     name = bankInfo["NAME"]
@@ -93,7 +93,7 @@ def get_bosc(url, bankInfo=None):
                 return [(name, rateCNYUSD)]
     except:
         traceback.print_exc()
-    return [(name, None)]
+    return [(name, 0)]
 
 def get_shacombank(url, bankInfo=None):
     name = bankInfo["NAME"]
@@ -110,7 +110,7 @@ def get_shacombank(url, bankInfo=None):
                 return [(name, rateCNYUSD)]
     except:
         traceback.print_exc()
-    return [(name, None)]
+    return [(name, 0)]
 
 def get_impl2():
     global BANK_INFOS

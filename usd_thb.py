@@ -81,7 +81,7 @@ def get_bot(url, bankInfo=None):
                 return rateUSDTHB
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_bkb(url, bankInfo=None):
     try:
@@ -90,7 +90,7 @@ def get_bkb(url, bankInfo=None):
         name = bankInfo["NAME"]
         if not xpath:
             print("[WARNING] Cannot find FxRate from {}".format(name))
-            return None
+            return 0
         utils.get_with_retry(driver, url)
 
         def get_text(dr):
@@ -104,7 +104,7 @@ def get_bkb(url, bankInfo=None):
         return fxrate
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_kasikorn(url, bankInfo=None):
     try:
@@ -119,7 +119,7 @@ def get_kasikorn(url, bankInfo=None):
                 return fxrate
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_krungsri(url, bankInfo=None):
     try:
@@ -140,7 +140,7 @@ def get_krungsri(url, bankInfo=None):
                         return fxrate
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_scb(url, bankInfo=None):
     try:
@@ -149,7 +149,7 @@ def get_scb(url, bankInfo=None):
         name = bankInfo["NAME"]
         if not xpath:
             print("[WARNING] Cannot find FxRate from {}".format(name))
-            return None
+            return 0
         utils.get_with_retry(driver, url)
 
         def get_text(dr):
@@ -162,7 +162,7 @@ def get_scb(url, bankInfo=None):
         return fxrate
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_impl2():
     global BANK_INFOS

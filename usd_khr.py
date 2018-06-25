@@ -78,7 +78,7 @@ def get_nbc(url):
         return rateKHRUSD.split(" ")[0]
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_amk(url):
     try:
@@ -90,7 +90,7 @@ def get_amk(url):
         return rateKHRUSD.split(" ")[1]
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_acleda(url):
     try:
@@ -107,7 +107,7 @@ def get_acleda(url):
                     return rateKHRUSD
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_canadia(url):
     try:
@@ -119,7 +119,7 @@ def get_canadia(url):
         return rateKHRUSD
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_idbc(url):
     try:
@@ -135,7 +135,7 @@ def get_idbc(url):
                 return rateKHRUSD
     except:
         traceback.print_exc()
-    return None
+    return 0
 
 def get_impl2():
     global BANK_INFOS
