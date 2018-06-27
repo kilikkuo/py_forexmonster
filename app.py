@@ -3,6 +3,7 @@
 from flask import Flask, request, current_app
 from utils import is_local_dev_env, create_phantomjs
 from datetime import datetime
+import pytz
 import json
 import threading
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -64,7 +65,8 @@ def usd_to_something_worker(something, callback):
     moduleName = "usd_" + something
     module = __import__(moduleName)
 
-    startTime = datetime.now()
+    tz = pytz.timezone('Asia/Taipei')
+    startTime = datetime.now(tz)
     result = module.get_current_forex_price()
 
     table = ""
