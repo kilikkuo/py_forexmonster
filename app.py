@@ -66,7 +66,7 @@ def usd_to_something_worker(something, callback):
     module = __import__(moduleName)
 
     tz = pytz.timezone('Asia/Taipei')
-    startTime = datetime.now(tz)
+    startTime = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
     result = module.get_current_forex_price()
 
     table = ""
