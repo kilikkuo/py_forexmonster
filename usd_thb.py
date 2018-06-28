@@ -173,7 +173,7 @@ def get_impl2():
             url = bankInfo.get("URL")
             name = bankInfo.get("NAME")
             fxrate = globals()[implementation](url, bankInfo)
-            if fxrate is None:
+            if not fxrate:
                 fxrate = "0"
                 print("Partner : {} => CANNOT get price now ... please check !".format(name))
             else:
