@@ -69,7 +69,6 @@ def get_impl2():
 
     bankNames = [item["NAME"] for item in BANK_INFOS]
     rows = soup.find_all('tr')
-
     result = {}
     for r in rows:
         children = r.findChildren()
