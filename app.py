@@ -109,6 +109,11 @@ def create_workers():
     IN_PROGRESS.append(t3)
     t4 = threading.Thread(target = usd_to_something_worker, args=("cny", worker_callback), name='cny')
     IN_PROGRESS.append(t4)
+    t5 = threading.Thread(target = usd_to_something_worker, args=("php", worker_callback), name='php')
+    IN_PROGRESS.append(t5)
+    t6 = threading.Thread(target = usd_to_something_worker, args=("inr", worker_callback), name='inr')
+    IN_PROGRESS.append(t6)
+
 
     DISPLAY_PAGE = INITIAL_PAGE_HEAD + get_progress() + INITIAL_PAGE_TAIL
     for t in IN_PROGRESS:
