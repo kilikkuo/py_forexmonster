@@ -15,7 +15,7 @@ IN_PROGRESS = []
 DISPLAY_PAGE = ""
 LAST_TRIGGER_TIME = None
 NEXT_TRIGGER_TIME = None
-RETRIGGER_DURATION = 120
+RETRIGGER_DURATION = 300
 PAGE_REFRESH_DURATION = 5
 
 TABLE_SCRIPTS_BEGIN = "<table style=\"border: 5px double rgb(109, 2, 107); height: 100px;" +\
@@ -113,6 +113,8 @@ def create_workers():
     IN_PROGRESS.append(t5)
     t6 = threading.Thread(target = usd_to_something_worker, args=("inr", worker_callback), name='inr')
     IN_PROGRESS.append(t6)
+    t7 = threading.Thread(target = usd_to_something_worker, args=("idr", worker_callback), name='idr')
+    IN_PROGRESS.append(t7)
 
 
     DISPLAY_PAGE = INITIAL_PAGE_HEAD + get_progress() + INITIAL_PAGE_TAIL

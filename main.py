@@ -20,7 +20,8 @@ if __name__ == "__main__":
                         'usd_khr' : True,
                         'usd_cny' : True,
                         'usd_php' : True,
-                        'usd_inr' : True}
+                        'usd_inr' : True,
+                        'usd_idr' : True}
 
         if CORRIDOR_LUT.get(corridorName, False):
             corridor = __import__(corridorName)
