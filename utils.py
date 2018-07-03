@@ -20,12 +20,12 @@ def create_chromedriver(args=[]):
     options = webdriver.ChromeOptions()
 
 
-    profile = {"plugins.plugins_list": [{"enabled": False,
-                                         "name": "Chrome PDF Viewer"}],
-               "download.default_directory": "./",
-               "download.extensions_to_open": ""}
+    # profile = {"plugins.plugins_list": [{"enabled": False,
+    #                                      "name": "Chrome PDF Viewer"}],
+    #            "download.default_directory": "./",
+    #            "download.extensions_to_open": ""}
 
-    options.add_experimental_option("prefs", profile)
+    # options.add_experimental_option("prefs", profile)
     for arg in args:
         options.add_argument(arg)
 
@@ -34,9 +34,16 @@ def create_chromedriver(args=[]):
             CHROME_DRIVER = webdriver.Chrome(executable_path="./chromedriver",
                                              chrome_options=options)
         else:
+            CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
             chrome_exec_shim = os.environ.get("GOOGLE_CHROME_BIN", "chromedriver")
-            print("CHROME BIN : {}".format(chrome_exec_shim))
-            CHROME_DRIVER = webdriver.Chrome(executable_path=chrome_exec_shim,
+            print("CHROME BIN : {} / hardcode : {}".format(chrome_exec_shim, CHROMEDRIVER_PATH))
+            chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
+            options.binary_location = chrome_bin
+            options.add_argument("--disable-gpu")
+            options.add_argument("--no-sandbox")
+            options.add_argument('headless')
+            options.add_argument('window-size=1200x600')
+            CHROME_DRIVER = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
                                              chrome_options=options)
     CHROME_DRIVER.implicitly_wait(5)
     return CHROME_DRIVER
