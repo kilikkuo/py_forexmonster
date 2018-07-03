@@ -1,8 +1,2 @@
 heroku/python
 https://github.com/stomita/heroku-buildpack-phantomjs
-
-heroku/python
-https://github.com/heroku/heroku-buildpack-google-chrome
-
-heroku/python
-https://github.com/heroku/heroku-buildpack-chromedriver
