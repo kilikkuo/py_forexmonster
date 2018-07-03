@@ -95,8 +95,10 @@ def get_hdfcbank(url, bankInfo=None):
         r = requests.get(url)
         r.encoding = 'utf-8'
         soup = BeautifulSoup(r.text, "html.parser")
+        print(soup)
         tds = soup.find_all("td")
         for idx, td in enumerate(tds):
+            print(td)
             if td.text == "USD":
                 next_td = tds[idx+1]
                 rateINRUSD = next_td.text
