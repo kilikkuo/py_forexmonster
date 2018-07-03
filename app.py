@@ -1,7 +1,7 @@
 # coding=UTF-8
 
 from flask import Flask, request, current_app
-from utils import is_local_dev_env, create_phantomjs
+from utils import is_local_dev_env, create_phantomjs, create_chromedriver
 from datetime import datetime, timedelta
 import pytz
 import json
