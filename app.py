@@ -57,21 +57,13 @@ def get_head_tail_exclude_div():
 @app.route('/')
 def index():
     global DISPLAY_PAGE
-    # global NEXT_TRIGGER_TIME
-    # if NEXT_TRIGGER_TIME:
-    #     head, tail = get_head_tail_exclude_div()
-    #     DISPLAY_PAGE = head + get_progress() + tail
-    #     before_div = DISPLAY_PAGE.partition("<div>")[0] if len(DISPLAY_PAGE.partition("<div>")) == 3 else None
-    #     after_div = DISPLAY_PAGE.partition("</div>")[2] if len(DISPLAY_PAGE.partition("</div>")) == 3 else None
-    #     if before_div and after_div:
-    #         newContent = "<div> Refresh FX in {} seconds </div>".format(diff.seconds)
-    #         DISPLAY_PAGE = before_div + newContent + after_div
     if DISPLAY_PAGE:
         head, tail = get_head_tail_exclude_div()
         DISPLAY_PAGE = head + get_progress() + tail
         return DISPLAY_PAGE
 
     create_phantomjs()
+    create_chromedriver()
     create_workers()
     return DISPLAY_PAGE
 

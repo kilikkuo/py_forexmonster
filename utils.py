@@ -25,7 +25,7 @@ def create_chromedriver(args=[]):
         if is_local_dev_env():
             CHROME_DRIVER = webdriver.PhantomJS(executable_path="./chromedriver")
         else:
-            CHROME_DRIVER = webdriver.PhantomJS(executable_path="/app/.apt/usr/bin/google-chrome")
+            CHROME_DRIVER = webdriver.PhantomJS(executable_path="./.chromedriver/bin/chromedriver")
     CHROME_DRIVER.implicitly_wait(5)
     return CHROME_DRIVER
 
