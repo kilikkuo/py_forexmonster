@@ -1,5 +1,5 @@
 # coding=UTF-8
-
+import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
@@ -34,7 +34,9 @@ def create_chromedriver(args=[]):
             CHROME_DRIVER = webdriver.Chrome(executable_path="./chromedriver",
                                              chrome_options=options)
         else:
-            CHROME_DRIVER = webdriver.Chrome(executable_path="./.chromedriver/bin/chromedriver",
+            chrome_exec_shim = os.environ.get("GOOGLE_CHROME_BIN", "chromedriver")
+            print("CHROME BIN : {}".format(chrome_exec_shim))
+            CHROME_DRIVER = webdriver.Chrome(executable_path=chrome_exec_shim,
                                              chrome_options=options)
     CHROME_DRIVER.implicitly_wait(5)
     return CHROME_DRIVER
