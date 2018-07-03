@@ -18,14 +18,24 @@ def create_phantomjs():
 def create_chromedriver(args=[]):
     global CHROME_DRIVER
     options = webdriver.ChromeOptions()
+
+
+    profile = {"plugins.plugins_list": [{"enabled": False,
+                                         "name": "Chrome PDF Viewer"}],
+               "download.default_directory": "./",
+               "download.extensions_to_open": ""}
+
+    options.add_experimental_option("prefs", profile)
     for arg in args:
         options.add_argument(arg)
-    
+
     if CHROME_DRIVER is None:
         if is_local_dev_env():
-            CHROME_DRIVER = webdriver.PhantomJS(executable_path="./chromedriver")
+            CHROME_DRIVER = webdriver.Chrome(executable_path="./chromedriver",
+                                             chrome_options=options)
         else:
-            CHROME_DRIVER = webdriver.PhantomJS(executable_path="./.chromedriver/bin/chromedriver")
+            CHROME_DRIVER = webdriver.Chrome(executable_path="./.chromedriver/bin/chromedriver",
+                                             chrome_options=options)
     CHROME_DRIVER.implicitly_wait(5)
     return CHROME_DRIVER
 
