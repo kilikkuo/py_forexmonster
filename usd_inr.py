@@ -31,6 +31,7 @@ BANK_INFOS = [
                 "SWIFT": "HDFCINBBXXX",
                 "NAME": "HDFC BANK LIMITED.",
                 "URL": "https://www.hdfcbank.com/nri_banking/Foreign_Exchng_Rates/Foreign_Exchng_Rates.asp",
+                "XPATH": "//tr[3]/td[3]",
                 "ENABLED": True,
                 "IMPLEMENTATION": "get_hdfcbank"
             },
@@ -92,19 +93,22 @@ def get_kotak(url, bankInfo=None):
 def get_hdfcbank(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"}
-        r = requests.get(url, headers=headers)
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, "html.parser")
-        print(soup)
-        tds = soup.find_all("td")
-        for idx, td in enumerate(tds):
-            if td.text == "USD":
-                next_td = tds[idx+1]
-                rateINRUSD = next_td.text
-                rateINRUSD = rateINRUSD.replace(",", "")
-                rateINRUSD = locale.atof(rateINRUSD)
-                return [(bankName, rateINRUSD)]
+        driver = utils.create_phantomjs()
+        xpath = bankInfo["XPATH"]
+        name = bankInfo["NAME"]
+        if not xpath:
+            print("[WARNING] Cannot find FxRate from {}".format(name))
+            return 0
+        utils.get_with_retry(driver, url)
+        def get_text(dr):
+            elem = dr.find_element(By.XPATH, xpath)
+            return elem.text != ""
+        WebDriverWait(driver, 10, 0.5).until(get_text)
+        elem = driver.find_element_by_xpath(xpath)
+        rateINRUSD = elem.text
+        rateINRUSD = rateINRUSD.replace(",", "")
+        rateINRUSD = locale.atof(rateINRUSD)
+        return [(bankName, rateINRUSD)]
     except:
         traceback.print_exc()
     return [(bankName, 0)]
