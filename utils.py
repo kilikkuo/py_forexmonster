@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
 PHANTONJS_DRIVER = None
+CHROME_DRIVER = None
 def create_phantomjs():
     global PHANTONJS_DRIVER
     if PHANTONJS_DRIVER is None:
@@ -15,11 +16,18 @@ def create_phantomjs():
     return PHANTONJS_DRIVER
 
 def create_chromedriver(args=[]):
+    global CHROME_DRIVER
     options = webdriver.ChromeOptions()
     for arg in args:
         options.add_argument(arg)
-    driver = webdriver.Chrome(executable_path='./chromedriver', chrome_options=options)
-    return driver
+    
+    if CHROME_DRIVER is None:
+        if is_local_dev_env():
+            CHROME_DRIVER = webdriver.PhantomJS(executable_path="./chromedriver")
+        else:
+            CHROME_DRIVER = webdriver.PhantomJS(executable_path="/app/.apt/usr/bin/google-chrome")
+    CHROME_DRIVER.implicitly_wait(5)
+    return CHROME_DRIVER
 
 def get_with_retry(driver, url, numRetry=2):
     for _ in range(numRetry):
