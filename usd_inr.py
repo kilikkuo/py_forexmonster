@@ -92,7 +92,7 @@ def get_kotak(url, bankInfo=None):
 def get_hdfcbank(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        headers = {"User-Agent": "User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"}
+        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"}
         r = requests.get(url, headers=headers)
         r.encoding = 'utf-8'
         soup = BeautifulSoup(r.text, "html.parser")
