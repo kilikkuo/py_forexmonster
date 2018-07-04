@@ -2,6 +2,7 @@
 
 from flask import Flask, request, current_app
 from utils import is_local_dev_env, create_phantomjs, create_chromedriver
+from main import get_corridor_lut
 from datetime import datetime, timedelta
 import pytz
 import json
@@ -93,44 +94,35 @@ def create_workers():
     IN_PROGRESS = []
     LAST_TRIGGER_TIME = datetime.now(pytz.timezone('Asia/Taipei'))
     NEXT_TRIGGER_TIME = LAST_TRIGGER_TIME + timedelta(seconds=RETRIGGER_DURATION)
-    t1 = threading.Thread(target = usd_to_something_worker, args=("ntd", worker_callback), name='ntd')
-    IN_PROGRESS.append(t1)
-    t2 = threading.Thread(target = usd_to_something_worker, args=("khr", worker_callback), name='khr')
-    IN_PROGRESS.append(t2)
-    t3 = threading.Thread(target = usd_to_something_worker, args=("thb", worker_callback), name='thb')
-    IN_PROGRESS.append(t3)
-    t4 = threading.Thread(target = usd_to_something_worker, args=("cny", worker_callback), name='cny')
-    IN_PROGRESS.append(t4)
-    t5 = threading.Thread(target = usd_to_something_worker, args=("php", worker_callback), name='php')
-    IN_PROGRESS.append(t5)
-    t6 = threading.Thread(target = usd_to_something_worker, args=("inr", worker_callback), name='inr')
-    IN_PROGRESS.append(t6)
-    t7 = threading.Thread(target = usd_to_something_worker, args=("idr", worker_callback), name='idr')
-    IN_PROGRESS.append(t7)
 
+    lut = get_corridor_lut()
+    for corridor, enabled in lut.items():
+        _from, _to = corridor.split("_")
+        t = threading.Thread(target = from_to_worker, args=(_from, _to, worker_callback), name=_to)
+        IN_PROGRESS.append(t)
 
     DISPLAY_PAGE = INITIAL_PAGE_HEAD + get_progress() + INITIAL_PAGE_TAIL
     for t in IN_PROGRESS:
         t.start()
 
-def usd_to_something_worker(something, callback):
-    moduleName = "usd_" + something
+def from_to_worker(_fㄐㄧom, _to, callback):
+    moduleName = "{}_{}".format(_from, _to)
     module = __import__(moduleName)
 
     tz = pytz.timezone('Asia/Taipei')
     result = module.get_current_forex_price()
 
     table = ""
-    table += "<p>USD <=> {}<br/>".format(something.upper())
+    table += "<p>{} <=> {}<br/>".format(_from.upper(), _to.upper())
     table += TABLE_SCRIPTS_BEGIN
-    table += "<tr><th>{:>12}</th><th>{:>12}</th></tr>".format("外匯機構", "牌價")
+    table += "<tr><th>{:>12}</th><th>{:>12}</th></tr>".format("Organization", "Exchange Rate")
     for bank, price in result.items():
         table += "<tr><td>{:>30}</td><td>{:>12}</td></tr>".format(bank, price)
 
     table += TABLE_SCRIPTS_END
     table += "</p>"
 
-    callback(something, {"results": table})
+    callback(_to, {"results": table})
 
 def start_app():
     job = scheduler.add_job(create_workers, 'interval', seconds=RETRIGGER_DURATION)

@@ -1,5 +1,16 @@
 # coding=UTF-8
 
+def get_corridor_lut():
+        # Console version
+    CORRIDOR_LUT = {'usd_ntd' : True,
+                    'usd_thb' : True,
+                    'usd_khr' : True,
+                    'usd_cny' : True,
+                    'usd_php' : True,
+                    'usd_inr' : True,
+                    'usd_idr' : True}
+    return CORRIDOR_LUT
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Process arguments.')
@@ -14,15 +25,7 @@ if __name__ == "__main__":
         from app import start_app
         start_app()
     else:
-        # Console version
-        CORRIDOR_LUT = {'usd_ntd' : True,
-                        'usd_thb' : True,
-                        'usd_khr' : True,
-                        'usd_cny' : True,
-                        'usd_php' : True,
-                        'usd_inr' : True,
-                        'usd_idr' : True}
-
-        if CORRIDOR_LUT.get(corridorName, False):
+        lut = get_corridor_lut()
+        if lut.get(corridorName, False):
             corridor = __import__(corridorName)
             corridor.get_current_forex_price()
