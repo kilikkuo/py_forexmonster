@@ -22,11 +22,11 @@ def create_chromedriver(args=[]):
     profile = {"plugins.plugins_list": [{"enabled": False,
                                          "name": "Chrome PDF Viewer"}],
                "download.default_directory": "./",
-               "download.extensions_to_open": ""}
+               "download.extensions_to_open": "applications/pdf"}
     options.add_experimental_option("prefs", profile)
     options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    # options.add_argument('headless')
+    # options.add_argument("--no-sandbox")
+    # options.add_argument('--headless')
     options.add_argument("--disable-extensions");
     options.add_argument("--disable-dev-shm-usage");
     options.add_argument('window-size=1200x600')

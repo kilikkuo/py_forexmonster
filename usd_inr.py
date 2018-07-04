@@ -48,7 +48,7 @@ BANK_INFOS = [
                 "SWIFT": "PUNBINBBXXX",
                 "NAME": "Punjab National Bank",
                 "URL": "https://www.pnbindia.in/downloadprocess.aspx?fid=A+rrvZeJc+PIaxfEqVTIQQ==",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_phbindia"
             },
 ]
@@ -136,7 +136,10 @@ def get_phbindia(url, bankInfo=None):
     try:
         driver = utils.create_chromedriver()
         r = driver.get(url)
+        import time
+        time.sleep(4)
         print(r)
+
         print("Status: Download Complete.")
         driver.close()
         # for idx, td in enumerate(tds):

@@ -97,9 +97,10 @@ def create_workers():
 
     lut = get_corridor_lut()
     for corridor, enabled in lut.items():
-        _from, _to = corridor.split("_")
-        t = threading.Thread(target = from_to_worker, args=(_from, _to, worker_callback), name=_to)
-        IN_PROGRESS.append(t)
+        if enabled:
+            _from, _to = corridor.split("_")
+            t = threading.Thread(target = from_to_worker, args=(_from, _to, worker_callback), name=_to)
+            IN_PROGRESS.append(t)
 
     DISPLAY_PAGE = INITIAL_PAGE_HEAD + get_progress() + INITIAL_PAGE_TAIL
     for t in IN_PROGRESS:
