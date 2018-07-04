@@ -47,7 +47,7 @@ BANK_INFOS = [
             {
                 "SWIFT": "PUNBINBBXXX",
                 "NAME": "Punjab National Bank",
-                "URL": "https://www.pnbindia.in/downloadprocess.aspx?fid=A+rrvZeJc+PIaxfEqVTIQQ",
+                "URL": "https://www.pnbindia.in/downloadprocess.aspx?fid=A+rrvZeJc+PIaxfEqVTIQQ==",
                 "ENABLED": True,
                 "IMPLEMENTATION": "get_phbindia"
             },
@@ -134,10 +134,10 @@ def get_icicibank(url, bankInfo=None):
 def get_phbindia(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        r = requests.get(url)
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, "html.parser")
-        # tds = soup.find_all("td")
+        driver = utils.create_chromedriver()
+        r = driver.get(url)
+        print("Status: Download Complete.")
+        driver.close()
         # for idx, td in enumerate(tds):
         #     if "USD" in td.text.strip():
         #         next_td = tds[idx+1]
