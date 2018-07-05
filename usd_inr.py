@@ -134,14 +134,14 @@ def get_icicibank(url, bankInfo=None):
 def get_phbindia(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        driver = utils.create_chromedriver()
-        r = driver.get(url)
+        # driver = utils.create_chromedriver()
+        # r = driver.get(url)
         import time
         time.sleep(4)
-        print(r)
+        # print(r)
 
         print("Status: Download Complete.")
-        driver.close()
+        # driver.close()
         # for idx, td in enumerate(tds):
         #     if "USD" in td.text.strip():
         #         next_td = tds[idx+1]
