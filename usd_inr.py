@@ -15,7 +15,7 @@ BANK_INFOS = [
                 "SWIFT": "RBISINBBXXX",
                 "NAME": "Reserve Bank of India.",
                 "URL": "https://rbi.org.in/SCRIPTS/BS_DisplayReferenceRate.aspx",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_rbi"
             },
 
@@ -23,7 +23,7 @@ BANK_INFOS = [
                 "SWIFT": "KKBKINBBXXX",
                 "NAME": "Kotak Mahindra Bank Ltd.",
                 "URL": "https://www.kotak.com/j1001drup/phpapps/content/siteadmin/get_forex_rates_data2.php",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_kotak"
             },
 
@@ -32,7 +32,7 @@ BANK_INFOS = [
                 "NAME": "HDFC BANK LIMITED.",
                 "URL": "https://www.hdfcbank.com/nri_banking/Foreign_Exchng_Rates/Foreign_Exchng_Rates.asp",
                 "XPATH": "//tr[3]/td[3]",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_hdfcbank"
             },
 
@@ -40,7 +40,7 @@ BANK_INFOS = [
                 "SWIFT": "ICICINBBXXX",
                 "NAME": "ICICI Bank Limited",
                 "URL": "https://www.icicibank.com/nri-banking/money_transfer/money-transfer-rates.page",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_icicibank"
             },
 

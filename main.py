@@ -2,13 +2,13 @@
 
 def get_corridor_lut():
         # Console version
-    CORRIDOR_LUT = {'usd_ntd' : False,
-                    'usd_thb' : False,
-                    'usd_khr' : False,
-                    'usd_cny' : False,
-                    'usd_php' : False,
+    CORRIDOR_LUT = {'usd_ntd' : True,
+                    'usd_thb' : True,
+                    'usd_khr' : True,
+                    'usd_cny' : True,
+                    'usd_php' : True,
                     'usd_inr' : True,
-                    'usd_idr' : False}
+                    'usd_idr' : True}
     return CORRIDOR_LUT
 
 if __name__ == "__main__":
