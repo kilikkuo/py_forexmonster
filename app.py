@@ -123,7 +123,7 @@ def from_to_worker(_from, _to, callback):
     table += TABLE_SCRIPTS_END
     table += "</p>"
 
-    callback(_to, {"results": table})
+    callback(moduleName, {"results": table})
 
 def start_app():
     job = scheduler.add_job(create_workers, 'interval', seconds=RETRIGGER_DURATION)
