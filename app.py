@@ -63,8 +63,8 @@ def index():
         DISPLAY_PAGE = head + get_progress() + tail
         return DISPLAY_PAGE
 
-    create_phantomjs()
-    create_chromedriver()
+    # create_phantomjs()
+    # create_chromedriver()
     create_workers()
     return DISPLAY_PAGE
 

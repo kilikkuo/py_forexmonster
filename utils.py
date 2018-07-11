@@ -24,8 +24,8 @@ def create_chromedriver(args=[]):
                "download.default_directory": "./",
                "download.extensions_to_open": "applications/pdf"}
     options.add_experimental_option("prefs", profile)
-    # options.add_argument("--disable-gpu")
-    # options.add_argument("--no-sandbox")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
     options.add_argument('--headless')
     # options.add_argument("--disable-extensions");
     # options.add_argument("--disable-dev-shm-usage");
