@@ -3,20 +3,21 @@ import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
-PHANTONJS_DRIVER = None
-CHROME_DRIVER = None
+# PHANTONJS_DRIVER = None
+# CHROME_DRIVER = None
 def create_phantomjs():
-    global PHANTONJS_DRIVER
-    if PHANTONJS_DRIVER is None:
-        if is_local_dev_env():
-            PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path="./phantomjs211/bin/phantomjs")
-        else:
-            PHANTONJS_DRIVER = webdriver.PhantomJS(executable_path="./vendor/phantomjs/bin/phantomjs")
-    PHANTONJS_DRIVER.implicitly_wait(5)
-    return PHANTONJS_DRIVER
+    # global PHANTONJS_DRIVER
+    # if PHANTONJS_DRIVER is None:
+    driver = None
+    if is_local_dev_env():
+        driver = webdriver.PhantomJS(executable_path="./phantomjs211/bin/phantomjs")
+    else:
+        driver = webdriver.PhantomJS(executable_path="./vendor/phantomjs/bin/phantomjs")
+    driver.implicitly_wait(5)
+    return driver
 
 def create_chromedriver(args=[]):
-    global CHROME_DRIVER
+    # global CHROME_DRIVER
     options = webdriver.ChromeOptions()
 
     profile = {"plugins.plugins_list": [{"enabled": False,
@@ -33,18 +34,19 @@ def create_chromedriver(args=[]):
     for arg in args:
         options.add_argument(arg)
 
-    if CHROME_DRIVER is None:
-        if is_local_dev_env():
-            CHROME_DRIVER = webdriver.Chrome(executable_path="./chromedriver",
-                                             chrome_options=options)
-        else:
-            CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
-            chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
-            options.binary_location = chrome_bin
-            CHROME_DRIVER = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
-                                             chrome_options=options)
-    CHROME_DRIVER.implicitly_wait(5)
-    return CHROME_DRIVER
+    # if CHROME_DRIVER is None:
+    driver = None
+    if is_local_dev_env():
+        driver = webdriver.Chrome(executable_path="./chromedriver",
+                                            chrome_options=options)
+    else:
+        CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
+        chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
+        options.binary_location = chrome_bin
+        driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
+                                            chrome_options=options)
+    driver.implicitly_wait(5)
+    return driver
 
 def get_with_retry(driver, url, numRetry=2):
     for _ in range(numRetry):
