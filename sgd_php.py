@@ -65,6 +65,7 @@ def get_pnb(url, bankInfo=None):
         rateSGDPHP = content.partition("P1,000 = S$")[2].partition("\n</pre>")[0]
         rateSGDPHP = rateSGDPHP.replace(",", "")
         rateSGDPHP = locale.atof(rateSGDPHP)
+        driver.quit()
         return [("{}, unit(1000)".format(bankName), rateSGDPHP)]
     except:
         traceback.print_exc()
@@ -80,6 +81,7 @@ def get_uob(url, bankInfo=None):
             return elem != None
         WebDriverWait(driver, 10, 0.5).until(get_text)
         content = driver.page_source
+        driver.quit()
         soup = BeautifulSoup(content, "html.parser")
         tds = soup.find_all("td")
         for idx, td in enumerate(tds):

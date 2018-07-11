@@ -105,6 +105,7 @@ def get_hdfcbank(url, bankInfo=None):
             return elem.text != ""
         WebDriverWait(driver, 10, 0.5).until(get_text)
         elem = driver.find_element_by_xpath(xpath)
+        driver.quit()
         rateINRUSD = elem.text
         rateINRUSD = rateINRUSD.replace(",", "")
         rateINRUSD = locale.atof(rateINRUSD)

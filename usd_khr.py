@@ -43,30 +43,6 @@ BANK_INFOS = [
             "IMPLEMENTATION": "get_idbc"}
 ]
 
-def get_impl():
-    global BANK_INFOS
-    driver = create_headless_chromedriver()
-    try:
-        for item in BankInfo:
-            url = item["URL"]
-            xpath = item["XPATH"]
-            name = item["NAME"]
-            if not xpath:
-                print("[WARNING] Cannot find FxRate from {}".format(name))
-                continue
-            get_with_retry(driver, url)
-            result, elem = find_element_by_xpath_safely(driver, xpath)
-            if not result:
-                print("[WARNING] Cannot find FxRate from {} - No such element !!".format(name))
-                continue
-            fxrate = elem.text.encode("utf-8")
-            if "khr" in fxrate.lower():
-                fxrate = fxrate.split(" ")[1]
-            fxrate = fxrate.replace(",", "")
-            print("Partner : {} / FxRate : {}".format(name, locale.atof(fxrate)))
-    except:
-        traceback.print_exc()
-
 def get_nbc(url):
     try:
         r = requests.get(url)
@@ -137,7 +113,7 @@ def get_idbc(url):
         traceback.print_exc()
     return 0
 
-def get_impl2():
+def get_impl():
     global BANK_INFOS
     result = {}
     for bankInfo in BANK_INFOS:
@@ -157,4 +133,4 @@ def get_impl2():
     pass
 
 def get_current_forex_price():
-    return get_impl2()
+    return get_impl()

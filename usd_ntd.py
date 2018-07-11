@@ -32,34 +32,8 @@ BANK_INFOS  = [{"SWIFT": "BKTWTWTP",
                 "INTERBANK_TRANS_CODE": "822",
                 "NAME": u"中國信託"}
     ]
+
 def get_impl():
-    global BANK_INFOS
-    global ALL_PRICE_URL
-
-    bankNames = [item["NAME"] for item in BANK_INFOS]
-    driver = utils.create_chromedriver()
-
-    result = {}
-    utils.get_with_retry(driver, ALL_PRICE_URL)
-    try:
-        xpathTable = "//div[@id='right']/table[2]/tbody/tr"
-        lstElem = driver.find_elements_by_xpath(xpathTable)
-        for i in range(2, len(lstElem)+1):
-            xpathRow = xpathTable + "[{}]/td".format(i)
-            elem = driver.find_element_by_xpath(xpathRow)
-            encodedBankName = elem.text.encode("utf-8")
-            if encodedBankName in bankNames:
-                xpathIBTB = xpathRow + "[4]"
-                elem = driver.find_element_by_xpath(xpathIBTB)
-                fxrate = elem.text.encode("utf-8")
-                fxrate = fxrate.replace(",", "")
-                print("Bank : {} / FxRate : {}".format(encodedBankName, locale.atof(fxrate)))
-                result[encodedBankName] = locale.atof(fxrate)
-    except:
-        traceback.print_exc()
-    return result
-
-def get_impl2():
     global BANK_INFOS
     global ALL_PRICE_URL
 
@@ -84,4 +58,4 @@ def get_impl2():
     return result
 
 def get_current_forex_price():
-    return get_impl2()
+    return get_impl()

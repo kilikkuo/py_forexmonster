@@ -45,27 +45,6 @@ BANK_INFOS = [{"SWIFT": "BOTHTHBK",
                  "ENABLED": True,
                  "IMPLEMENTATION": "get_scb"}
 ]
-def get_impl():
-    global BANK_INFOS
-    driver = create_headless_chromedriver()
-    try:
-        for item in BANK_INFOS:
-            url = item["URL"]
-            xpath = item["XPATH"]
-            name = item["NAME"]
-            if not xpath:
-                print("[WARNING] Cannot find FxRate from {}".format(name))
-                continue
-            get_with_retry(driver, url)
-            elem = driver.find_element_by_xpath(xpath)
-            print('elem text : {}'.format(elem.text))
-            fxrate = elem.text.encode("utf-8")
-            print('fxrate : {}'.format(fxrate))
-            fxrate = fxrate.replace(",", "")
-            print(fxrate)
-            print("Partner : {} / FxRate : {}".format(name, locale.atof(fxrate)))
-    except:
-        traceback.print_exc()
 
 def get_bot(url, bankInfo=None):
     try:
@@ -97,10 +76,10 @@ def get_bkb(url, bankInfo=None):
             elem = dr.find_element(By.XPATH, xpath)
             return elem.text != ""
         WebDriverWait(driver, 10, 0.5).until(get_text)
-
         elem = driver.find_element_by_xpath(xpath)
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
+        driver.quit()
         return fxrate
     except:
         traceback.print_exc()
@@ -159,12 +138,13 @@ def get_scb(url, bankInfo=None):
         elem = driver.find_element_by_xpath(xpath)
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
+        driver.quit()
         return fxrate
     except:
         traceback.print_exc()
     return 0
 
-def get_impl2():
+def get_impl():
     global BANK_INFOS
     result = {}
     for bankInfo in BANK_INFOS:
@@ -184,4 +164,4 @@ def get_impl2():
     pass
 
 def get_current_forex_price():
-    return get_impl2()
+    return get_impl()
