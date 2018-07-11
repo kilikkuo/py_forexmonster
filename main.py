@@ -8,7 +8,8 @@ def get_corridor_lut():
                     'usd_cny' : True,
                     'usd_php' : True,
                     'usd_inr' : True,
-                    'usd_idr' : True}
+                    'usd_idr' : True,
+                    'sgd_php' : True}
     return CORRIDOR_LUT
 
 if __name__ == "__main__":
