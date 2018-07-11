@@ -71,7 +71,7 @@ def get_realtimecny(url, bankInfo=None):
             tds = soup.find_all("td")
             rateCNYUSD = tds[0].text
             rateCNYUSD = locale.atof(rateCNYUSD.replace(",", ""))
-            rateInfo.append((bank, round(rateCNYUSD / 100.0, 4)))
+            rateInfo.append(("{}, unit(100)".format(bank), round(rateCNYUSD, 4)))
         return rateInfo
     except:
         traceback.print_exc()
@@ -87,10 +87,10 @@ def get_bosc(url, bankInfo=None):
         tds = table.find_all("td")
         for idx, td in enumerate(tds):
             if td.text == "USD":
-                unit = locale.atof(tds[idx+1].text.replace(",", ""))
+                unit = int(locale.atof(tds[idx+1].text.replace(",", "")))
                 buyRate = locale.atof(tds[idx+3].text.replace(",", ""))
-                rateCNYUSD = round(buyRate / unit, 4)
-                return [(name, rateCNYUSD)]
+                rateCNYUSD = buyRate
+                return [("{}, unit({})".format(name, unit), rateCNYUSD)]
     except:
         traceback.print_exc()
     return [(name, 0)]

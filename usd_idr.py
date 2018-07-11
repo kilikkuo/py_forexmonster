@@ -81,9 +81,8 @@ def get_panin(url, bankInfo=None):
         content = ''.join([td.text for td in tds])
         rateIDRUSD = content.split(":")[1]
         rateIDRUSD = rateIDRUSD.replace(",", "")
-        # We ask the exchange amount for 10 USD, so need to divide the result with 10.
-        rateIDRUSD = locale.atof(rateIDRUSD) / 10.0
-        return [(bankName, rateIDRUSD)]
+        rateIDRUSD = locale.atof(rateIDRUSD)
+        return [("{}, unit(10)".format(bankName), rateIDRUSD)]
     except:
         traceback.print_exc()
     return [(bankName, 0)]

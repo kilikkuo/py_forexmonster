@@ -105,10 +105,10 @@ def get_hdfcbank(url, bankInfo=None):
             return elem.text != ""
         WebDriverWait(driver, 10, 0.5).until(get_text)
         elem = driver.find_element_by_xpath(xpath)
-        driver.quit()
         rateINRUSD = elem.text
         rateINRUSD = rateINRUSD.replace(",", "")
         rateINRUSD = locale.atof(rateINRUSD)
+        driver.quit()
         return [(bankName, rateINRUSD)]
     except:
         traceback.print_exc()
@@ -132,30 +132,60 @@ def get_icicibank(url, bankInfo=None):
         traceback.print_exc()
     return [(bankName, 0)]
 
+def parse(path):
+    from pdfminer.pdfparser import PDFParser,PDFDocument
+    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+    from pdfminer.converter import PDFPageAggregator
+    from pdfminer.layout import LTTextBoxHorizontal,LAParams
+    from pdfminer.pdfinterp import PDFTextExtractionNotAllowed
+
+    with open(path, 'rb') as fd:
+        doc = PDFDocument()
+        praser = PDFParser(fd)
+        praser.set_document(doc)
+        doc.set_parser(praser)
+        doc.initialize()
+
+        if not doc.is_extractable:
+            raise PDFTextExtractionNotAllowed
+        else:
+            laparams = LAParams()
+            rsrcmgr = PDFResourceManager()
+            device = PDFPageAggregator(rsrcmgr, laparams=laparams)
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
+
+            foundUSD = False
+            for page in doc.get_pages():
+                interpreter.process_page(page)
+                layout = device.get_result()
+                for x in layout:
+                    if (isinstance(x, LTTextBoxHorizontal)):
+                        results = x.get_text().strip()
+                        if foundUSD:
+                            rateINRUSD = results
+                            rateINRUSD = rateINRUSD.replace(",", "")
+                            rateINRUSD = locale.atof(rateINRUSD)
+                            return rateINRUSD
+                        if results == "USD":
+                            foundUSD = True
+                break
+    return 0
+
 def get_phbindia(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        # driver = utils.create_chromedriver()
-        # r = driver.get(url)
-        import time
-        time.sleep(4)
-        # print(r)
+        r = requests.get(url, stream=True)
+        with open('./phbindia.pdf', 'wb') as fd:
+            for chunk in r.iter_content(2048):
+                fd.write(chunk)
 
-        print("Status: Download Complete.")
-        # driver.close()
-        # for idx, td in enumerate(tds):
-        #     if "USD" in td.text.strip():
-        #         next_td = tds[idx+1]
-        #         ratePHPUSD = next_td.text
-        #         ratePHPUSD = ratePHPUSD.replace(",", "")
-        #         ratePHPUSD = locale.atof(ratePHPUSD)
-        #         return [(bankName, ratePHPUSD)]
+        rateINRUSD = parse('./phbindia.pdf')
+        return [(bankName, rateINRUSD)]
     except:
         traceback.print_exc()
     return [(bankName, 0)]
-    
 
-def get_impl2():
+def get_impl():
     global BANK_INFOS
     result = {}
     for bankInfo in BANK_INFOS:
@@ -175,4 +205,4 @@ def get_impl2():
     pass
 
 def get_current_forex_price():
-    return get_impl2()
+    return get_impl()
