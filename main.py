@@ -9,6 +9,7 @@ def get_corridor_lut():
                     'usd_php' : True,
                     'usd_inr' : True,
                     'usd_idr' : True,
+                    'usd_jpy' : True,
                     'sgd_php' : True}
     return CORRIDOR_LUT
 
