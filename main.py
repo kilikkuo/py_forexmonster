@@ -10,6 +10,7 @@ def get_corridor_lut():
                     'usd_inr' : True,
                     'usd_idr' : True,
                     'usd_jpy' : True,
+                    'usd_vnd' : True,
                     'sgd_php' : True}
     return CORRIDOR_LUT
 
