@@ -139,15 +139,8 @@ def get_vietin(url, bankInfo=None):
 
 def get_agribank(url, bankInfo=None):
     bankName = bankInfo["NAME"]
-    try:        
-        # driver = utils.create_chromedriver()
-        # utils.get_with_retry(driver, url)
-        # def get_text(dr):
-        #     elem = dr.find_element(By.ID, "tblTG")
-        #     return elem != None
-        # WebDriverWait(driver, 10, 0.5).until(get_text)
-        # content = driver.page_source
-        # print(content)
+    try:
+        pass
     except:
         traceback.print_exc()
     return [(bankName, 0)]
