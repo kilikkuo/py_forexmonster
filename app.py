@@ -75,7 +75,7 @@ def worker_callback(name, ret):
     part = ret["results"]
 
     IN_PROGRESS = [t for t in IN_PROGRESS if t.name != name]
-    DISPLAY_PAGE = head + get_progress() + part + tail
+    DISPLAY_PAGE = head + get_progress() + tail + part
 
 def remove(tag, id, html):
     builtStartingTag = "<{} id='{}'>".format(tag, id)
@@ -112,7 +112,7 @@ def from_to_worker(_from, _to, callback):
     result = module.get_current_forex_price()
 
     table = ""
-    table += "<p>{} <=> {}<br/>".format(_from.upper(), _to.upper())
+    table += "<p style=\"float: left\">{} <=> {}<br/>".format(_from.upper(), _to.upper())
     table += TABLE_SCRIPTS_BEGIN
     table += "<tr><th>{:>12}</th><th>{:>12}</th></tr>".format("Organization", "Exchange Rate")
     for bank, price in result.items():
