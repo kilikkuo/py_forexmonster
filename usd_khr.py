@@ -121,6 +121,7 @@ def get_impl():
             implementation = bankInfo.get("IMPLEMENTATION")
             url = bankInfo.get("URL")
             name = bankInfo.get("NAME")
+            print('url : {} / name : {}'.format(url, name))
             fxrate = globals()[implementation](url)
             if not fxrate:
                 fxrate = "0"

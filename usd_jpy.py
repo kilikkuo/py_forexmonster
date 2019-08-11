@@ -16,7 +16,7 @@ BANK_INFOS = [
             {
                 "SWIFT": "BOJPJPJTXXX",
                 "NAME": "Bank of Japan.",
-                "URL": "https://www.boj.or.jp/en/statistics/market/forex/fxdaily/",
+                "URL": "https://www.boj.or.jp/en/statistics/market/forex/fxdaily/fxlist/",
                 "ENABLED": True,
                 "IMPLEMENTATION": "get_boj"
             },

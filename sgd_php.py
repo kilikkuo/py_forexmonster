@@ -55,7 +55,7 @@ def get_dbs(url, bankInfo=None):
 def get_pnb(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        driver = utils.create_phantomjs()
+        driver = utils.create_chromedriver()
         utils.get_with_retry(driver, url)
         def get_text(dr):
             elem = dr.find_element(By.TAG_NAME, "table")
@@ -74,7 +74,7 @@ def get_pnb(url, bankInfo=None):
 def get_uob(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        driver = utils.create_phantomjs()
+        driver = utils.create_chromedriver()
         utils.get_with_retry(driver, url)
         def get_text(dr):
             elem = dr.find_element(By.XPATH, "//tr[2]/td[2]")

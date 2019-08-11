@@ -93,7 +93,7 @@ def get_kotak(url, bankInfo=None):
 def get_hdfcbank(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        driver = utils.create_phantomjs()
+        driver = utils.create_chromedriver()
         xpath = bankInfo["XPATH"]
         name = bankInfo["NAME"]
         if not xpath:

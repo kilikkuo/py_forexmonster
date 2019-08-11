@@ -14,34 +14,34 @@ BANK_INFOS = [{"SWIFT": "BOTHTHBK",
                  "NAME": "BANK OF THAILAND",
                  "URL": "https://www.bot.or.th/english/_layouts/application/exchangerate/exchangerate.aspx",
                  "XPATH": "//table[@id='ctl00_PlaceHolderMain_dgAvg']/tbody/tr[4]/td[5]",
-                 "ENABLED": True,
+                 "ENABLED": False,
                  "IMPLEMENTATION": "get_bot"},
 
                 {"SWIFT": "BKKBTHBK",
                  "NAME": "BANGKOK BANK PUBLIC COMPANY LIMITED",
-                 "URL": "http://www.bangkokbank.com/BangkokBank/WebServices/Rates/Pages/FX_Rates.aspx",
-                 "XPATH": "//table[@id='rate1']/tbody/tr[6]/td[6]",
-                 "ENABLED": True,
+                 "URL": "https://www.bangkokbank.com/en/Personal/Other-Services/View-Rates/Foreign-Exchange-Rates",
+                 "XPATH": "//table[@class='table-primary table-foreign-exchange-rates blue']",
+                 "ENABLED": False,
                  "IMPLEMENTATION": "get_bkb"},
 
                 {"SWIFT": "KASITHBK",
                  "NAME": "KASIKORNBANK PUBLIC COMPANY LIMITED",
                  "URL": "https://www.kasikornbank.com/en/rate/Pages/Foreign-Exchange.aspx",
                  "XPATH": "//table[@id='table-exchangerate']/tbody/tr[5]/td[4]",
-                 "ENABLED": True,
+                 "ENABLED": False,
                  "IMPLEMENTATION": "get_kasikorn"},
 
                 {"SWIFT": "AYUDTHBK",
                  "NAME": "BANK OF AYUDHYA PUBLIC COMPANY LIMITED",
                  "URL": "https://www.krungsri.com/bank/en/Other/ExchangeRate/Todayrates.html",
                  "XPATH": "//div[@id='tab_content_1']/div/div[3]/table/tbody/tr/td[8]",
-                 "ENABLED": True,
+                 "ENABLED": False,
                  "IMPLEMENTATION": "get_krungsri"},
 
                 {"SWIFT": "SICOTHBK",
                  "NAME": "SIAM COMMERCIAL BANK PCL., THE",
-                 "URL": "http://www.scb.co.th/th/personal-banking/foreign-exchange-rates.html#fxrate",
-                 "XPATH": "//div[@id='fxrate']/div/div[2]/div/table/tbody/tr[3]/td[4]",
+                 "URL": "http://www.scb.co.th/en/personal-banking/foreign-exchange-rates.html#fxrate",
+                 "XPATH": "//*[@id='fxrate']/div/div[2]/div/table/tbody/tr[5]/td[4]",
                  "ENABLED": True,
                  "IMPLEMENTATION": "get_scb"}
 ]
@@ -64,19 +64,21 @@ def get_bot(url, bankInfo=None):
 
 def get_bkb(url, bankInfo=None):
     try:
-        driver = utils.create_phantomjs()
+        driver = utils.create_chromedriver()
         xpath = bankInfo["XPATH"]
         name = bankInfo["NAME"]
         if not xpath:
             print("[WARNING] Cannot find FxRate from {}".format(name))
             return 0
         utils.get_with_retry(driver, url)
-
         def get_text(dr):
             elem = dr.find_element(By.XPATH, xpath)
-            return elem.text != ""
+            return elem is not None
         WebDriverWait(driver, 10, 0.5).until(get_text)
-        elem = driver.find_element_by_xpath(xpath)
+        
+        xpath2 = xpath + '/tbody/tr[3]/td[5]'
+        elem = driver.find_element_by_xpath(xpath2)
+        print(elem)
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")
         driver.quit()
@@ -123,7 +125,7 @@ def get_krungsri(url, bankInfo=None):
 
 def get_scb(url, bankInfo=None):
     try:
-        driver = utils.create_phantomjs()
+        driver = utils.create_chromedriver()
         xpath = bankInfo["XPATH"]
         name = bankInfo["NAME"]
         if not xpath:
@@ -133,8 +135,9 @@ def get_scb(url, bankInfo=None):
 
         def get_text(dr):
             elem = dr.find_element(By.XPATH, xpath)
-            return elem.text != ""
+            return elem is not None
         WebDriverWait(driver, 10, 0.5).until(get_text)
+
         elem = driver.find_element_by_xpath(xpath)
         fxrate = elem.text
         fxrate = fxrate.replace(",", "")

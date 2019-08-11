@@ -1,7 +1,9 @@
 # coding=UTF-8
 
-from flask import Flask, request, current_app
-from utils import is_local_dev_env, create_phantomjs, create_chromedriver
+from flask import Flask, request, current_app, render_template
+from utils import is_local_dev_env, create_chromedriver
+import asyncio
+import websockets
 from main import get_corridor_lut
 from datetime import datetime, timedelta
 import pytz
@@ -63,8 +65,12 @@ def index():
         DISPLAY_PAGE = head + get_progress() + tail
         return DISPLAY_PAGE
 
-    create_workers()
+    # create_workers()
     return DISPLAY_PAGE
+
+@app.route('/home')
+def home():
+    return render_template("home.html")
 
 def worker_callback(name, ret):
     global DISPLAY_PAGE, IN_PROGRESS
@@ -123,10 +129,89 @@ def from_to_worker(_from, _to, callback):
 
     callback(moduleName, {"results": table})
 
+def message_parser(ws, message):
+    result = {}
+    if message == 'gettable':
+        result['type'] = 'gettable'
+        result['data'] = []
+        lut = get_corridor_lut()
+        for corridorName, enabled in lut.items():
+            if enabled:
+                corridor = __import__(corridorName)
+                bankInfo = corridor.BANK_INFOS
+                _from, _to = corridorName.split("_")
+                result['data'].append((_from, _to, bankInfo))
+    elif message.startswith('get_fxrate_'):
+        splits = message.split('_')
+        src = splits[2]
+        dest = splits[3]
+        threading.Thread(target=trigger_crawler, name="Crawler", args=(ws, src, dest)).start()
+    
+    return json.dumps(result)
+
+GLOBAL_DICT = {'a': 1, 'b':2, 'c': 3}
+GLOBAL_SET = set()
+
+def get_fxrate(_from, _to):
+    print(" >>>>>> get_fxrate : {} to {}".format(_from, _to))
+    moduleName = "{}_{}".format(_from, _to)
+    module = __import__(moduleName)
+    tz = pytz.timezone('Asia/Taipei')
+    result = module.get_current_forex_price()
+    return result
+
+async def async_get_fx_rate(websocket, src, dest):
+    global GLOBAL_DICT
+    rates = get_fxrate(src, dest)
+    result = {}
+    result['type'] = 'fxrate'
+    result['src'] = src
+    result['dest'] = dest
+    result['data'] = rates
+    print('{}->{}: {}'.format(src, dest, rates))
+    await websocket.send(json.dumps(result))
+    print("bye")
+
+def trigger_crawler(websocket, src, dest):
+    event_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(event_loop)
+    ct = asyncio.ensure_future(async_get_fx_rate(websocket, src, dest))
+    asyncio.get_event_loop().run_until_complete(event_loop.shutdown_asyncgens())
+
+def start_websocket_server():
+    ws_event_loop = asyncio.new_event_loop()
+
+    def stop_ws_event_loop():
+        input('Press <enter> to stop')
+        print('Stopping websocket server ...')
+        ws_event_loop.call_soon_threadsafe(ws_event_loop.stop)
+
+    def run_ws_event_loop():
+        asyncio.set_event_loop(ws_event_loop)
+        async def message_handler(websocket, path):
+            global GLOBAL_SET
+            print("entering ... ")
+            if websocket not in GLOBAL_SET:
+                GLOBAL_SET.add(websocket)
+            async for message in websocket:
+                print(message)
+                response = message_parser(websocket, message)
+                await websocket.send(response)
+            print(" done ...")
+
+        ws_task = asyncio.ensure_future(websockets.serve(message_handler, 'localhost', 9487))
+        asyncio.get_event_loop().run_forever()
+        asyncio.get_event_loop().run_until_complete(ws_event_loop.shutdown_asyncgens())
+        print("Web socket server stopped!")
+
+    threading.Thread(target=run_ws_event_loop, name="ws2_loop").start()
+    threading.Thread(target=stop_ws_event_loop).start()
+
 def start_app():
-    job = scheduler.add_job(create_workers, 'interval', seconds=RETRIGGER_DURATION)
+    # job = scheduler.add_job(create_workers, 'interval', seconds=RETRIGGER_DURATION)
     scheduler.start()
     if is_local_dev_env():
+        start_websocket_server()
         app.run(host="0.0.0.0", debug=True, use_reloader=False)
     else:
         from os import environ

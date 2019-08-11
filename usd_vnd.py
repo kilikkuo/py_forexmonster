@@ -71,7 +71,6 @@ def get_sbv(url, bankInfo=None):
         tds = soup.find_all("td")
         for idx, td in enumerate(tds):
             if td.text.strip().rstrip() == "United States Dollar":
-                print("yes")
                 next_td = tds[idx + 1]
                 rateVNDUSD = next_td.text
                 rateVNDUSD = locale.atof(rateVNDUSD.replace(",", ""))
@@ -83,7 +82,7 @@ def get_sbv(url, bankInfo=None):
 def get_hdb(url, bankInfo=None):
     bankName = bankInfo["NAME"]
     try:
-        driver = utils.create_phantomjs()
+        driver = utils.create_chromedriver()
         utils.get_with_retry(driver, url)
         def get_text(dr):
             elem = dr.find_element(By.CLASS_NAME, "borderBottomLeft")

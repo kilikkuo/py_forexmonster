@@ -1,0 +1,68 @@
+USDJPY
+	•	https://www.boj.or.jp/en/statistics/market/forex/fxdaily/index.htm/
+	•	http://www.bk.mufg.jp/gdocs/kinri/list_j/kinri/kawase.html
+	•	https://www.mizuhobank.co.jp/market/dollar.html
+	•	https://www.smbctb.co.jp/en/investment/foreigncurrency/fcy_rates.html
+
+USDIDR
+	•	https://www.bi.go.id/en/moneter/informasi-kurs/transaksi-bi/Default.aspx
+	•	http://www.panin.co.id/pages/individu-calculator-currency
+	•	https://www.bca.co.id/Individu/Sarana/Kurs-dan-Suku-Bunga/Kurs-dan-Kalkulator
+	•	https://www.bankmandiri.co.id/en/home?row=2
+	•	https://www.bankmayapada.com/id/biaya-tarif/info-kurs
+
+USDPHP
+	•	http://www.bsp.gov.ph/
+	•	https://www.bdo.com.ph/mobile/forex
+	•	https://www.metrobank.com.ph/
+	•	https://www.bpiexpressonline.com/p/1/872/forex-rates
+
+USDVND
+	•	https://www.sbv.gov.vn/webcenter/portal/en/home/rm/er?centerWidth=80%25&leftWidth=20%25&rightWidth=0%25&showFooter=false&showHeader=false&_adf.ctrl-state=684tn1xgc_4&_afrLoop=4636739211272000#%40%3F_afrLoop%3D4636739211272000%26centerWidth%3D80%2525%26leftWidth%3D20%2525%26rightWidth%3D0%2525%26showFooter%3Dfalse%26showHeader%3Dfalse%26_adf.ctrl-state%3D19izpkwweh_4
+	•	https://www.hdbank.com.vn/?ArticleId=f7fb576a-fe3e-40ea-9a67-4b00a3f06742
+	•	https://www.bidc.com.kh/Default.aspx?po=2&p=85&nid=291#tygia
+	•	https://www.vietinbank.vn/web/home/en/doc/saving/exrate.html
+	•	http://agribank.com.vn/62/1129/financial-institutions/forex-dealing/spot.aspx
+	•	https://www.vietcombank.com.vn/ExchangeRates/?lang=en
+
+
+USDINR
+	•	https://rbi.org.in/SCRIPTS/BS_DisplayReferenceRate.aspx
+	•	https://www.kotak.com/en/rates/forex-rates.html
+	•	https://www.hdfcbank.com/nri_banking/Foreign_Exchng_Rates/Foreign_Exchng_Rates.asp
+	•	https://www.icicibank.com/nri-banking/money_transfer/money-transfer-rates.page
+	•	https://www.pnbindia.in/downloadprocess.aspx?fid=A+rrvZeJc+PIaxfEqVTIQQ==
+
+USDCNY
+	•	http://www.chinamoney.com.cn/chinese/index.html
+	•	https://www.real-time-cny.com/unionpay/
+	•	http://www.bosc.cn/
+	•	https://www.shacombank.com.hk/tch/rate/foreign-currency-tt-exchange-rate.jsp
+
+USDKHR
+	•	https://www.nbc.org.kh/english/economic_research/exchange_rate.php
+	•	https://www.amkcambodia.com/foreign-exchange.html
+	•	https://www.acledabank.com.kh/kh/eng/ps_cmforeignexchange
+	•	https://www.canadiabank.com.kh/en/exchange_rate.aspx
+	•	https://www.bidc.com.kh/#tygia
+
+USDTHB
+	•	https://www.bot.or.th/english/_layouts/application/exchangerate/exchangerate.aspx
+	•	http://www.bangkokbank.com/BangkokBank/WebServices/Rates/Pages/FX_Rates.aspx
+	•	https://www.krungsri.com/bank/en/Other/ExchangeRate/Todayrates.html
+	•	https://www.kasikornbank.com/en/rate/Pages/Foreign-Exchange.aspx
+	•	http://www.scb.co.th/scb_api/index.jsp ==> http://www.scb.co.th/th/personal-banking/foreign-exchange-rates.html#fxrate
+
+USDNTD
+	•	http://www.findrate.tw/bank/29/#.WxYHD0iFOUk
+	•	http://www.findrate.tw/bank/11/#.WxYHJEiFOUk
+	•	http://www.findrate.tw/bank/8/#.WxYHNkiFOUk
+	•	http://www.findrate.tw/bank/12/#.WxYHRUiFOUk
+	•	http://www.findrate.tw/bank/2/#.WxYHV0iFOUk
+
+SGDPHP
+	•	https://www.dbs.com.sg/personal/rates-online/foreign-currency-foreign-exchange.page
+	•	http://www.pnb.com.ph/singapore/
+	•	https://uniservices1.uobgroup.com/secure/online_rates/foreign_exchange_rates_against_singapore_dollar.jsp?s_pid=HOME201205_eg_quicklnk_ql7
+
+

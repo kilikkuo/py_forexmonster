@@ -3,48 +3,44 @@ import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
-# PHANTONJS_DRIVER = None
-# CHROME_DRIVER = None
-def create_phantomjs():
-    # global PHANTONJS_DRIVER
-    # if PHANTONJS_DRIVER is None:
-    driver = None
-    if is_local_dev_env():
-        driver = webdriver.PhantomJS(executable_path="./phantomjs211/bin/phantomjs")
-    else:
-        driver = webdriver.PhantomJS(executable_path="./vendor/phantomjs/bin/phantomjs")
-    driver.implicitly_wait(5)
-    return driver
-
+CHROME_DRIVER = None
 def create_chromedriver(args=[]):
-    # global CHROME_DRIVER
+    global CHROME_DRIVER
     options = webdriver.ChromeOptions()
+    ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/" +\
+        "537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+    print("ua : {}".format(ua))
+    options.add_argument("user-agent={}".format(ua))
 
     profile = {"plugins.plugins_list": [{"enabled": False,
                                          "name": "Chrome PDF Viewer"}],
                "download.default_directory": "./",
                "download.extensions_to_open": "applications/pdf"}
-    options.add_experimental_option("prefs", profile)
+    # options.add_experimental_option("prefs", profile)
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
+
     # options.add_argument("--disable-extensions");
     # options.add_argument("--disable-dev-shm-usage");
     # options.add_argument('window-size=1200x600')
     for arg in args:
         options.add_argument(arg)
 
-    # if CHROME_DRIVER is None:
     driver = None
-    if is_local_dev_env():
-        driver = webdriver.Chrome(executable_path="./chromedriver",
-                                            chrome_options=options)
+    if CHROME_DRIVER is None:
+        if is_local_dev_env():
+            driver = webdriver.Chrome(executable_path="./chromedriver",
+                                      chrome_options=options)
+        else:
+            CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
+            chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
+            options.binary_location = chrome_bin
+            driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
+                                                chrome_options=options)
+        CHROME_DRIVER = driver
     else:
-        CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
-        chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
-        options.binary_location = chrome_bin
-        driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
-                                            chrome_options=options)
+        driver = CHROME_DRIVER
     driver.implicitly_wait(5)
     return driver
 

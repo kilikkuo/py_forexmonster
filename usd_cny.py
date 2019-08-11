@@ -26,8 +26,7 @@ BANK_INFOS = [
                  "IMPLEMENTATION": "get_realtimecny",
                  "SUBURLS": {"ICBC": "http://www.real-time-cny.com/php/icbc.php",
                             "BOC": "http://www.real-time-cny.com/php/boc.php",
-                            "CCB": "http://www.real-time-cny.com/php/ccb.php",
-                            "ABC": "http://www.real-time-cny.com/php/abc.php"}},
+                            "CCB": "http://www.real-time-cny.com/php/ccb.php"}},
 
                 {"SWIFT": "BOSHCNSHXXX",
                  "NAME": "BANK OF SHANGHAI",

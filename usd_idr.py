@@ -15,14 +15,16 @@ BANK_INFOS = [
                 "SWIFT": "INDOIDJAXXX",
                 "NAME": "Bank Indonesia",
                 "URL": "https://www.bi.go.id/en/moneter/informasi-kurs/transaksi-bi/Default.aspx",
-                "ENABLED": True,
+                "ENABLED": False,
                 "IMPLEMENTATION": "get_bi"
             },
 
             {
                 "SWIFT": "PINBIDJAXXX",
                 "NAME": "Panin Bank",
-                "URL": "http://www.panin.co.id/ajax/callmycurrency/IDR*10*1*USD*undefined",
+                "URL": "https://www.panin.co.id/ajax/callmycurrency/idr*10*1*usd*undefined",
+                "URL_XPATH": "http://www.panin.co.id/",
+                "XPATH": "//*[@id='first']/tr[1]/td[2]",
                 "ENABLED": True,
                 "IMPLEMENTATION": "get_panin"
             },
@@ -31,7 +33,7 @@ BANK_INFOS = [
                 "SWIFT": "CENAIDJAXXX",
                 "NAME": "BCA (PT Bank Central Asia Tbk)",
                 "URL": "https://www.bca.co.id/Individu/Sarana/Kurs-dan-Suku-Bunga/Kurs-dan-Kalkulator",
-                "ENABLED": True,
+                "ENABLED": False,
                 "IMPLEMENTATION": "get_bca"
             },
 
@@ -39,7 +41,7 @@ BANK_INFOS = [
                 "SWIFT": "BMRIKYKYXXX",
                 "NAME": "PT Bank Mandiri (Persero) Tbk",
                 "URL": "https://www.bankmandiri.co.id/en/home?row=2",
-                "ENABLED": True,
+                "ENABLED": False,
                 "IMPLEMENTATION": "get_bankmandiri"
             },
 
@@ -47,7 +49,7 @@ BANK_INFOS = [
                 "SWIFT": "MAYAIDJAXXX",
                 "NAME": "PT Bank Mayapada International Tbk",
                 "URL": "https://myapps.bankmayapada.com/webbmi/infokursfull.aspx",
-                "ENABLED": True,
+                "ENABLED": False,
                 "IMPLEMENTATION": "get_bankmayapada"
             },
 ]
@@ -73,16 +75,37 @@ def get_bi(url, bankInfo=None):
 
 def get_panin(url, bankInfo=None):
     bankName = bankInfo["NAME"]
+    case = "!GO_XPATH"
     try:
-        r = requests.get(url)
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, "html.parser")
-        tds = soup.find_all("td")
-        content = ''.join([td.text for td in tds])
-        rateIDRUSD = content.split(":")[1]
-        rateIDRUSD = rateIDRUSD.replace(",", "")
-        rateIDRUSD = locale.atof(rateIDRUSD)
-        return [("{}, unit(10)".format(bankName), rateIDRUSD)]
+        if case == "GO_XPATH":
+            url = bankInfo["URL_XPATH"]
+            xpath = '//*[@id="first"]/tr[1]/td[2]'
+            driver = utils.create_chromedriver()
+            if not xpath:
+                print("[WARNING] Cannot find FxRate from {}".format(name))
+                return 0
+            utils.get_with_retry(driver, url)
+            elem = None
+            def get_text(dr):
+                return dr.find_element(By.XPATH, xpath) is not None
+            WebDriverWait(driver, 10, 0.5).until(get_text)
+
+            elem = driver.find_element(By.XPATH, xpath)
+            fxrate = elem.text
+            fxrate = fxrate.split(",")[0].replace(".", "")
+            driver.quit()
+            return [("{}, unit(1)".format(bankName), fxrate)]
+        else:
+            # 撿到槍, 但 SSL Certification Failed
+            r = requests.get(url, verify=False)
+            r.encoding = 'utf-8'
+            soup = BeautifulSoup(r.text, "html.parser")
+            tds = soup.find_all("td")
+            content = ''.join([td.text for td in tds])
+            rateIDRUSD = content.split(":")[1]
+            rateIDRUSD = rateIDRUSD.replace(",", "")
+            rateIDRUSD = locale.atof(rateIDRUSD)
+            return [("{}, unit(10)".format(bankName), rateIDRUSD)]
     except:
         traceback.print_exc()
     return [(bankName, 0)]

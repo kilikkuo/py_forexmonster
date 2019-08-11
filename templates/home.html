@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>websocket</title>
+</head>
+<body>
+    <textarea id="terminal" readonly></textarea>
+<script type="text/javascript">
+
+function rowCreate(tr, item) {
+    var tdOrg = document.createElement('td');
+    var tdEXRate = document.createElement('td');
+    if (item == null) {
+        tdOrg.appendChild(document.createTextNode('Organization'));
+        tdEXRate.appendChild(document.createTextNode('Exchange Rate'));
+    } else {
+        tdOrg.appendChild(document.createTextNode(item.NAME));
+        tdEXRate.setAttribute('id', item.NAME);
+        tdEXRate.textContent = 'N/A';
+    }
+    tr.appendChild(tdOrg);
+    tr.appendChild(tdEXRate);
+}
+
+function tableCreate(corridors) {
+  var body = document.getElementsByTagName('body')[0];
+  for (var i = 0; i < corridors.length; i++) {
+    var tbl = document.createElement('table');
+    tbl.style.border = '5px double rgb(109, 2, 107)'
+    tbl.style.width = '100%';
+    tbl.style.padding = '5px'
+    tbl.style.borderSpacing = '2px'
+    tbl.setAttribute('border', '1');
+
+    var tbdy = document.createElement('tbody');
+    var corridorItems = corridors[i][2];
+    var captionText = corridors[i][0] + ' => ' + corridors[i][1];
+    var tcap = document.createElement('caption');
+    tcap.appendChild(document.createTextNode(captionText));
+
+    for (var k = 0; k < corridorItems.length+1; k++) {
+        var tr = document.createElement('tr');
+        if (k == 0) {
+            rowCreate(tr, null);
+        } else {
+            rowCreate(tr, corridorItems[k-1]);
+        }
+        tbdy.appendChild(tr);
+    }
+
+    tbl.appendChild(tcap);
+    tbl.appendChild(tbdy);
+    body.appendChild(tbl)
+  }
+}
+
+var ws;
+function startWebsocket() {
+    console.log('Websocket start connecting ...');
+    var terminal = document.getElementById('terminal');
+    ws = new WebSocket("ws://127.0.0.1:9487");
+    ws.onopen =  function (msg) {
+        console.log('Websocket opened');
+    };
+    ws.onmessage = function (event) {
+        const dateTime = Date.now();
+        var msg = JSON.parse(event.data);
+        switch(msg.type) {
+            case "gettable":
+                corridors = msg.data;
+                tableCreate(corridors);
+                break;
+            case "fxrate":
+                console.log('src : ' + JSON.stringify(msg.src));
+                console.log('dest : ' + JSON.stringify(msg.dest));
+                console.log('rates : ' + JSON.stringify(msg.data));
+                for (var k in msg.data) {
+                    document.getElementById(k).textContent = msg.data[k];
+                }
+                break;
+        }
+        console.log('receive message : ' + msg);
+        terminal.innerHTML = msg;
+    };
+    ws.onerror = function (event) {
+        console.log('error :' + event.name + event.number);
+    };
+
+    ws.onclose =  function () {
+        console.log('Websocket closed');
+    };
+}
+function closeWebsocket() {
+    ws.close();
+}
+function sendMessage () {
+    console.log("Sending a message");
+    ws.send("Websocket from js");
+}
+function getTable () {
+    console.log("Getting table");
+    ws.send("gettable");
+}
+
+function get_src_dest (src, dest) {
+    console.log("Getting " + src + "->" + dest );
+    ws.send("get_fxrate_" + src + "_" + dest);
+}
+
+function get_usd_ntd () {
+    get_src_dest("usd", "ntd");
+}
+
+function get_usd_thb () {
+    get_src_dest("usd", "thb");
+}
+
+function get_usd_khr () {
+    get_src_dest("usd", "khr");
+}
+
+function get_usd_cny () {
+    get_src_dest("usd", "cny");
+}
+
+</script>
+
+<button onclick="startWebsocket()">createWebsocket</button><br>
+<button onclick="closeWebsocket()">closeWebsocket</button>
+<button onclick="sendMessage()">sendMessage</button>
+<button onclick="getTable()">getTable</button>
+<button onclick="get_usd_ntd()">get usd_ntd</button>
+<button onclick="get_usd_thb()">get usd_thb</button>
+<button onclick="get_usd_khr()">get usd_khr</button>
+<button onclick="get_usd_cny()">get usd_cny</button>
+</body>
+</html>
