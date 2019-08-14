@@ -9,7 +9,7 @@ def create_chromedriver(args=[]):
     options = webdriver.ChromeOptions()
     ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/" +\
         "537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
-    print("ua : {}".format(ua))
+
     options.add_argument("user-agent={}".format(ua))
 
     profile = {"plugins.plugins_list": [{"enabled": False,
@@ -17,10 +17,11 @@ def create_chromedriver(args=[]):
                "download.default_directory": "./",
                "download.extensions_to_open": "applications/pdf"}
     # options.add_experimental_option("prefs", profile)
+
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
-    # options.add_argument('--headless')
 
+    # options.add_argument('--headless')
     # options.add_argument("--disable-extensions");
     # options.add_argument("--disable-dev-shm-usage");
     # options.add_argument('window-size=1200x600')

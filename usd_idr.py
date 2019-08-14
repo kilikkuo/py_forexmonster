@@ -75,9 +75,9 @@ def get_bi(url, bankInfo=None):
 
 def get_panin(url, bankInfo=None):
     bankName = bankInfo["NAME"]
-    case = "!GO_XPATH"
+    use_selenium = True
     try:
-        if case == "GO_XPATH":
+        if use_selenium:
             url = bankInfo["URL_XPATH"]
             xpath = '//*[@id="first"]/tr[1]/td[2]'
             driver = utils.create_chromedriver()
@@ -85,6 +85,8 @@ def get_panin(url, bankInfo=None):
                 print("[WARNING] Cannot find FxRate from {}".format(name))
                 return 0
             utils.get_with_retry(driver, url)
+
+            # Poll the element every 0.5s with a 10s timeout
             elem = None
             def get_text(dr):
                 return dr.find_element(By.XPATH, xpath) is not None

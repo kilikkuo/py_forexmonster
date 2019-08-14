@@ -36,9 +36,10 @@ BANK_INFOS  = [{"SWIFT": "BKTWTWTP",
 def get_impl():
     global BANK_INFOS
     global ALL_PRICE_URL
-
+    # Send request to URL and get response from that
     r = requests.get(ALL_PRICE_URL)
     r.encoding = 'utf-8'
+    # Parse the server-side rendered page by bs4
     soup = BeautifulSoup(r.text, "html.parser")
 
     bankNames = [item["NAME"] for item in BANK_INFOS]
