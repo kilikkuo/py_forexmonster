@@ -23,10 +23,11 @@ BANK_INFOS = [
                 "SWIFT": "PINBIDJAXXX",
                 "NAME": "Panin Bank",
                 "URL": "https://www.panin.co.id/ajax/callmycurrency/idr*10*1*usd*undefined",
-                "URL_XPATH": "http://www.panin.co.id/",
+                "URL_FOR_XPATH": "http://www.panin.co.id/",
                 "XPATH": "//*[@id='first']/tr[1]/td[2]",
                 "ENABLED": True,
-                "IMPLEMENTATION": "get_panin"
+                "USE_SELENIUM": False,
+                "IMPLEMENTATION": "get_panin_selenium"
             },
 
             {
@@ -75,10 +76,10 @@ def get_bi(url, bankInfo=None):
 
 def get_panin(url, bankInfo=None):
     bankName = bankInfo["NAME"]
-    use_selenium = True
+    use_selenium = bankInfo['USE_SELENIUM']
     try:
         if use_selenium:
-            url = bankInfo["URL_XPATH"]
+            url = bankInfo["URL_FOR_XPATH"]
             xpath = '//*[@id="first"]/tr[1]/td[2]'
             driver = utils.create_chromedriver()
             if not xpath:
@@ -98,7 +99,10 @@ def get_panin(url, bankInfo=None):
             driver.quit()
             return [("{}, unit(1)".format(bankName), fxrate)]
         else:
-            # 撿到槍, 但 SSL Certification Failed
+            # 撿到槍, 但 SSL Certification Failed (https://bugs.python.org/issue28150)
+            # Potential solution:
+            # 1) Install certifi to get Root CAs for verifying the identity of TLS hosts
+            # 2) Do not verify the server's certificate.
             r = requests.get(url, verify=False)
             r.encoding = 'utf-8'
             soup = BeautifulSoup(r.text, "html.parser")

@@ -53,7 +53,7 @@ def get_boj(url, bankInfo=None):
         while True and offset < 3:
             target = date.today() - timedelta(offset)
             fileName = "fx{}.pdf".format(target.strftime("%y%m%d"))
-            r = requests.get(url+fileName)
+            r = requests.get(url+fileName, stream=True)
             if r.status_code == 200:
                 return r
             else:
@@ -167,8 +167,11 @@ def parse(path, case):
         return 0
 
     with open(path, 'rb') as fd:
+        # Create a new Document
         doc = PDFDocument()
+        # Create a parser then set the file descriptor to it
         praser = PDFParser(fd)
+        # Link parser and document
         praser.set_document(doc)
         doc.set_parser(praser)
         doc.initialize()
@@ -176,6 +179,8 @@ def parse(path, case):
         if not doc.is_extractable:
             raise PDFTextExtractionNotAllowed
         else:
+            # Create Layout Params/ Resource manager/ Interpreter to start
+            # the pdf parsing procedure.
             laparams = LAParams()
             rsrcmgr = PDFResourceManager()
             device = PDFPageAggregator(rsrcmgr, laparams=laparams)
