@@ -15,7 +15,7 @@ BANK_INFOS = [
                 "SWIFT": "INDOIDJAXXX",
                 "NAME": "Bank Indonesia",
                 "URL": "https://www.bi.go.id/en/moneter/informasi-kurs/transaksi-bi/Default.aspx",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_bi"
             },
 
@@ -26,15 +26,15 @@ BANK_INFOS = [
                 "URL_FOR_XPATH": "http://www.panin.co.id/",
                 "XPATH": "//*[@id='first']/tr[1]/td[2]",
                 "ENABLED": True,
-                "USE_SELENIUM": False,
-                "IMPLEMENTATION": "get_panin_selenium"
+                "USE_SELENIUM": True,
+                "IMPLEMENTATION": "get_panin"
             },
 
             {
                 "SWIFT": "CENAIDJAXXX",
                 "NAME": "BCA (PT Bank Central Asia Tbk)",
                 "URL": "https://www.bca.co.id/Individu/Sarana/Kurs-dan-Suku-Bunga/Kurs-dan-Kalkulator",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_bca"
             },
 
@@ -42,7 +42,7 @@ BANK_INFOS = [
                 "SWIFT": "BMRIKYKYXXX",
                 "NAME": "PT Bank Mandiri (Persero) Tbk",
                 "URL": "https://www.bankmandiri.co.id/en/home?row=2",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_bankmandiri"
             },
 
@@ -50,7 +50,7 @@ BANK_INFOS = [
                 "SWIFT": "MAYAIDJAXXX",
                 "NAME": "PT Bank Mayapada International Tbk",
                 "URL": "https://myapps.bankmayapada.com/webbmi/infokursfull.aspx",
-                "ENABLED": False,
+                "ENABLED": True,
                 "IMPLEMENTATION": "get_bankmayapada"
             },
 ]
