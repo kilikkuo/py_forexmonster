@@ -146,10 +146,9 @@ def message_parser(ws, message):
         src = splits[2]
         dest = splits[3]
         threading.Thread(target=trigger_crawler, name="Crawler", args=(ws, src, dest)).start()
-    
+
     return json.dumps(result)
 
-GLOBAL_DICT = {'a': 1, 'b':2, 'c': 3}
 GLOBAL_SET = set()
 
 def get_fxrate(_from, _to):
@@ -161,7 +160,6 @@ def get_fxrate(_from, _to):
     return result
 
 async def async_get_fx_rate(websocket, src, dest):
-    global GLOBAL_DICT
     rates = get_fxrate(src, dest)
     result = {}
     result['type'] = 'fxrate'
@@ -173,39 +171,43 @@ async def async_get_fx_rate(websocket, src, dest):
     print("bye")
 
 def trigger_crawler(websocket, src, dest):
-    event_loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(event_loop)
-    ct = asyncio.ensure_future(async_get_fx_rate(websocket, src, dest))
-    asyncio.get_event_loop().run_until_complete(event_loop.shutdown_asyncgens())
+    asyncio.run(async_get_fx_rate(websocket, src, dest))
+
+async def message_handler(websocket, path):
+    print("entering ... : {}".format(path))
+    try:
+        async for message in websocket:
+            print(message)
+            response = message_parser(websocket, message)
+            await websocket.send(response)
+    finally:
+        pass
+    print(" done ...")
 
 def start_websocket_server():
+    # Create a event loop for websocket usage
     ws_event_loop = asyncio.new_event_loop()
 
-    def stop_ws_event_loop():
-        input('Press <enter> to stop')
+    def stop_ws_event_loop(evt_loop):
+        input('<<< Press <enter> to stop >>>\n')
         print('Stopping websocket server ...')
-        ws_event_loop.call_soon_threadsafe(ws_event_loop.stop)
+        evt_loop.call_soon_threadsafe(evt_loop.stop)
 
-    def run_ws_event_loop():
-        asyncio.set_event_loop(ws_event_loop)
-        async def message_handler(websocket, path):
-            global GLOBAL_SET
-            print("entering ... ")
-            if websocket not in GLOBAL_SET:
-                GLOBAL_SET.add(websocket)
-            async for message in websocket:
-                print(message)
-                response = message_parser(websocket, message)
-                await websocket.send(response)
-            print(" done ...")
-
-        ws_task = asyncio.ensure_future(websockets.serve(message_handler, 'localhost', 9487))
-        asyncio.get_event_loop().run_forever()
-        asyncio.get_event_loop().run_until_complete(ws_event_loop.shutdown_asyncgens())
+    def run_ws_event_loop(evt_loop):
+        # Set the websocket event loop to asyncio
+        asyncio.set_event_loop(evt_loop)
+        start_ws_server = websockets.serve(message_handler, 'localhost', 9487)
+        try:
+            evt_loop.run_until_complete(start_ws_server)
+            # Run the event loop until stop() is called.
+            evt_loop.run_forever()
+        finally:
+            evt_loop.run_until_complete(evt_loop.shutdown_asyncgens())
+            evt_loop.close()
         print("Web socket server stopped!")
 
-    threading.Thread(target=run_ws_event_loop, name="ws2_loop").start()
-    threading.Thread(target=stop_ws_event_loop).start()
+    threading.Thread(target=run_ws_event_loop, args=(ws_event_loop,), name="ws_loop").start()
+    threading.Thread(target=stop_ws_event_loop, args=(ws_event_loop,)).start()
 
 def start_app():
     # job = scheduler.add_job(create_workers, 'interval', seconds=RETRIGGER_DURATION)
