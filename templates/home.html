@@ -59,8 +59,10 @@ function startWebsocket() {
     console.log('Websocket start connecting ...');
     var terminal = document.getElementById('terminal');
     ws = new WebSocket("ws://127.0.0.1:9487");
-    ws.onopen =  function (msg) {
-        console.log('Websocket opened');
+    ws.onopen = function (event) {
+        msg = 'Websocket opened'
+        console.log(msg);
+        terminal.innerHTML = msg;
     };
     ws.onmessage = function (event) {
         const dateTime = Date.now();
@@ -92,6 +94,7 @@ function startWebsocket() {
 }
 function closeWebsocket() {
     ws.close();
+    ws = null;
 }
 function sendMessage () {
     console.log("Sending a message");

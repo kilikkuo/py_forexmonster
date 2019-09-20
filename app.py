@@ -5,13 +5,22 @@ from utils import is_local_dev_env
 import asyncio
 import websockets
 from main import get_corridor_lut
-import pytz
 import json
 import threading
-# from apscheduler.schedulers.background import BackgroundScheduler
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+fx_logger = logging.getLogger('fxrate')
+fx_logger.setLevel(logging.INFO)
+
+'''
+Logging for websockets
+'''
+# logger = logging.getLogger('websockets')
+# logger.setLevel(logging.DEBUG)
+# logger.addHandler(logging.StreamHandler())
 
 app = Flask(__name__)
-# scheduler = BackgroundScheduler()
 
 @app.route('/')
 def index():
@@ -43,10 +52,9 @@ def message_parser(ws, message):
     return json.dumps(result)
 
 def get_fxrate(_from, _to):
-    print(" >>>>>> get_fxrate : {} to {}".format(_from, _to))
+    fx_logger.info(" >>>>>> get_fxrate : {} to {}".format(_from, _to))
     moduleName = "{}_{}".format(_from, _to)
     module = __import__(moduleName)
-    tz = pytz.timezone('Asia/Taipei')
     result = module.get_current_forex_price()
     return result
 
@@ -57,28 +65,38 @@ async def async_get_fx_rate(websocket, src, dest):
     result['src'] = src
     result['dest'] = dest
     result['data'] = rates
-    print('{}->{}: {}'.format(src, dest, rates))
+    fx_logger.info('{}->{}: {}'.format(src, dest, rates))
     await websocket.send(json.dumps(result))
-    print("bye")
+    fx_logger.info("bye")
 
 def trigger_crawler(websocket, src, dest):
     asyncio.run(async_get_fx_rate(websocket, src, dest))
 
 async def message_handler(websocket, path):
-    print("entering ... : {}".format(path))
-    async for message in websocket:
-        print(message)
-        response = message_parser(websocket, message)
-        await websocket.send(response)
-    print(" done ...")
+    fx_logger.info("entering ... : {}".format(path))
+    try:
+        async for message in websocket:
+            print(message)
+            response = message_parser(websocket, message)
+            await websocket.send(response)
+    except Exception as e:
+        if e.code == 1005:
+            pass
+        else:
+            fx_logger.error(e)
+    finally:
+        pass
+    fx_logger.info(" done ...")
 
 def start_websocket_server():
     # Create a event loop for websocket usage
     ws_event_loop = asyncio.new_event_loop()
+    # Debug mode for asyncio
+    ws_event_loop.set_debug(True)
 
     def stop_ws_event_loop(evt_loop):
         input('<<< Press <enter> to stop >>>\n')
-        print('Stopping websocket server ...')
+        fx_logger.info('Stopping websocket server ...')
         evt_loop.call_soon_threadsafe(evt_loop.stop)
 
     def run_ws_event_loop(evt_loop):
@@ -92,7 +110,7 @@ def start_websocket_server():
         finally:
             evt_loop.run_until_complete(evt_loop.shutdown_asyncgens())
             evt_loop.close()
-        print("Web socket server stopped!")
+        fx_logger.info("Web socket server stopped!")
 
     threading.Thread(target=run_ws_event_loop, args=(ws_event_loop,), name="ws_loop").start()
     threading.Thread(target=stop_ws_event_loop, args=(ws_event_loop,)).start()
