@@ -70,7 +70,10 @@ async def async_get_fx_rate(websocket, src, dest):
     fx_logger.info("bye")
 
 def trigger_crawler(websocket, src, dest):
-    asyncio.run(async_get_fx_rate(websocket, src, dest))
+    f = async_get_fx_rate(websocket, src, dest)
+    crawler_event_loop = asyncio.new_event_loop()
+    crawler_event_loop.run_until_complete(asyncio.wait([f]))
+
 
 async def message_handler(websocket, path):
     fx_logger.info("entering ... : {}".format(path))
