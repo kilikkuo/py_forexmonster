@@ -23,7 +23,7 @@ requests2
 selenium
 six==1.11.0
 tzlocal==1.5.1
-urllib3==1.24.2
+urllib3==1.26.5
 Werkzeug>=0.15.3
 xvfbwrapper==0.2.9
 websockets==7.0
