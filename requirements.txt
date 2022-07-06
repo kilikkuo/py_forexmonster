@@ -26,4 +26,4 @@ tzlocal==1.5.1
 urllib3==1.24.2
 Werkzeug>=0.15.3
 xvfbwrapper==0.2.9
-websockets==7.0
+websockets==9.1
